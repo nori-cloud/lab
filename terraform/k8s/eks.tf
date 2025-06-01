@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-southeast-2"
+  region = var.region
 }
 
 data "aws_availability_zones" "available" {
@@ -10,19 +10,14 @@ data "aws_availability_zones" "available" {
 }
 
 locals {
-  cluster_name = "education-eks-${random_string.suffix.result}"
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
+  cluster_name = var.cluster_name
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.8.1"
 
-  name = "education-vpc"
+  name = var.vpc_name
 
   cidr = "10.0.0.0/16"
   azs  = slice(data.aws_availability_zones.available.names, 0, 3)
@@ -76,16 +71,6 @@ module "eks" {
       max_size     = 3
       desired_size = 2
     }
-
-    two = {
-      name = "node-group-2"
-
-      instance_types = ["t3.small"]
-
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
-    }
   }
 }
 
@@ -105,4 +90,28 @@ module "irsa-ebs-csi" {
   provider_url                  = module.eks.oidc_provider
   role_policy_arns              = [data.aws_iam_policy.ebs_csi_policy.arn]
   oidc_fully_qualified_subjects = ["system:serviceaccount:kube-system:ebs-csi-controller-sa"]
+}
+
+data "terraform_remote_state" "eks" {
+  backend = "local"
+  config = {
+    path = "./terraform.tfstate"
+  }
+}
+
+data "aws_eks_cluster" "cluster" {
+  name = data.terraform_remote_state.eks.outputs.cluster_name
+}
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = data.terraform_remote_state.eks.outputs.cluster_name
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", data.aws_eks_cluster.cluster.name]
+  }
 }
