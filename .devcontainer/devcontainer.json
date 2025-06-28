@@ -12,7 +12,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"hashicorp.terraform"
+				"hashicorp.terraform",
+				"amazonwebservices.aws-toolkit-vscode"
 			]
 		}
 	},
