@@ -1,0 +1,12 @@
+services:
+  workspace:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    command: sleep infinity
+    volumes:
+      - ../..:/workspace:cached
+      - workspace_config:/home/ubuntu/
+
+volumes:
+  workspace_config:
