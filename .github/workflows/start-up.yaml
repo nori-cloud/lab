@@ -10,6 +10,7 @@ jobs:
       run:
         working-directory: ./cloud/aws
     permissions:
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@v4
