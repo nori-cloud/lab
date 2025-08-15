@@ -1,0 +1,14 @@
+on:
+  schedule:
+    - cron: "0 9 * * 6"
+    - cron: "0 9 * * 7"
+
+jobs:
+  start-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - run: |
+          echo "Hello, world!"
