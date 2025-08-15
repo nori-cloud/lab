@@ -6,6 +6,9 @@ on:
 jobs:
   shutdown:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./cloud/aws
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
