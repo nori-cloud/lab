@@ -1,14 +1,42 @@
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 9 * * 6"
     - cron: "0 9 * * 7"
 
+defaults:
+  run:
+    working-directory: ./cloud/aws
+
 jobs:
   start-up:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - run: |
-          echo "Hello, world!"
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-external-id: ${{ secrets.AWS_ROLE_EXTERNAL_ID }}
+          role-duration-seconds: ${{ env.AWS_ROLE_DURATION_SECONDS}}
+          role-session-name: ga-opentofu-apply
+        
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.10.5
+
+      - run: tofu init
+      - run: tofu validate
+
+      - id: plan
+        run: tofu plan -no-color
+
+      - run: echo ${{ steps.plan.outputs.stdout }}
+      - run: echo ${{ steps.plan.outputs.stderr }}
+      - run: echo ${{ steps.plan.outputs.exitcode }}
