@@ -1,3 +1,5 @@
+name: Build and Push Infra Scheduler to ECR
+
 on:
   workflow_dispatch:
 
