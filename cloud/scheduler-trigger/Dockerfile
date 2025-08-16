@@ -5,8 +5,6 @@
 
 FROM public.ecr.aws/lambda/python:3.12
 
-COPY --from=ghcr.io/opentofu/opentofu:minimal /usr/local/bin/tofu /usr/local/bin/tofu
-
 COPY . ${LAMBDA_TASK_ROOT}
 
 RUN pip install -r requirements.txt
