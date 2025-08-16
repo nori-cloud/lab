@@ -75,7 +75,7 @@ jobs:
           ls -la $GITHUB_WORKSPACE
           ls -la
           tofu init
-          tofu apply -input=plan
+          tofu apply plan
 
   destroy:
     if: github.event.inputs.action == 'destroy'
