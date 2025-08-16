@@ -31,41 +31,221 @@ resource "aws_ecr_repository" "this" {
   image_tag_mutability = "MUTABLE"
 }
 
-# data "aws_iam_policy_document" "assume_role" {
-#   statement {
-#     effect = "Allow"
+# NEED TO APPLY THE ABOVE FIRST
 
-#     principals {
-#       type        = "Service"
-#       identifiers = ["lambda.amazonaws.com"]
-#     }
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect = "Allow"
 
-#     actions = ["sts:AssumeRole"]
-#   }
-# }
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
 
-# resource "aws_iam_role" "example" {
-#   name               = "lambda_execution_role"
-#   assume_role_policy = data.aws_iam_policy_document.assume_role.json
-# }
+    actions = ["sts:AssumeRole"]
+  }
+}
 
-# resource "aws_iam_role" "this" {
-#   name = "infra-scheduler-trigger"
-# }
+resource "aws_iam_role" "this" {
+  name               = "infra-scheduler-trigger-lambda-execution-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+}
 
-# resource "aws_lambda_function" "example" {
-#   function_name = "example_container_function"
-#   role          = aws_iam_role.example.arn
-#   package_type  = "Image"
-#   image_uri     = "${aws_ecr_repository.this.repository_url}:latest"
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.this.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
 
-#   image_config {
-#     entry_point = ["/lambda-entrypoint.sh"]
-#     command     = ["app.handler"]
-#   }
+resource "aws_lambda_function" "this" {
+  function_name = "infra-scheduler-trigger"
+  role          = aws_iam_role.this.arn
+  package_type  = "Image"
+  image_uri     = "${aws_ecr_repository.this.repository_url}:latest"
 
-#   memory_size = 512
-#   timeout     = 30
+  memory_size = 512
+  timeout     = 30
+}
 
-#   architectures = ["arm64"] # Graviton support for better price/performance
-# }
+resource "aws_lambda_permission" "allow_eventbridge_scheduler" {
+  statement_id  = "AllowExecutionFromEventBridgeScheduler"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.this.function_name
+  principal     = "scheduler.amazonaws.com"
+  source_arn    = "arn:aws:scheduler:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:schedule/*/*"
+}
+
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "eb_scheduler_execution_role_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["scheduler.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+resource "aws_iam_role" "eb_scheduler_execution_role" {
+  name               = "eb-scheduler-execution-role"
+  assume_role_policy = data.aws_iam_policy_document.eb_scheduler_execution_role_policy.json
+}
+
+data "aws_iam_policy_document" "scheduler_lambda_invoke" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "lambda:InvokeFunction"
+    ]
+    resources = [
+      aws_lambda_function.this.arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "scheduler_lambda_invoke" {
+  name   = "scheduler-lambda-invoke-policy"
+  policy = data.aws_iam_policy_document.scheduler_lambda_invoke.json
+}
+
+resource "aws_iam_role_policy_attachment" "scheduler_lambda_invoke" {
+  role       = aws_iam_role.eb_scheduler_execution_role.name
+  policy_arn = aws_iam_policy.scheduler_lambda_invoke.arn
+}
+
+resource "aws_scheduler_schedule_group" "infra-schedule-group" {
+  name = "infra-schedule-group"
+}
+
+resource "aws_scheduler_schedule" "infra_test_schedule" {
+  name       = "infra-schedule-test"
+  group_name = aws_scheduler_schedule_group.infra-schedule-group.name
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression = "cron(*/5 * * * ? *)"
+
+  target {
+    arn      = aws_lambda_function.this.arn
+    role_arn = aws_iam_role.eb_scheduler_execution_role.arn
+  }
+}
+
+resource "aws_scheduler_schedule" "infra_start_up_schedule" {
+  name       = "infra-schedule-start-up"
+  group_name = aws_scheduler_schedule_group.infra-schedule-group.name
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression = "cron(30 22 ? * FRI,SAT *)"
+
+  target {
+    arn      = aws_lambda_function.this.arn
+    role_arn = aws_iam_role.eb_scheduler_execution_role.arn
+  }
+}
+
+resource "aws_scheduler_schedule" "infra_shutdown_schedule" {
+  name       = "infra-schedule-shutdown"
+  group_name = aws_scheduler_schedule_group.infra-schedule-group.name
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  schedule_expression = "cron(0 2 ? * SAT,SUN *)"
+
+  target {
+    arn      = aws_lambda_function.this.arn
+    role_arn = aws_iam_role.eb_scheduler_execution_role.arn
+  }
+}
+
+# CloudWatch Log Group for Lambda (explicit creation for retention control)
+resource "aws_cloudwatch_log_group" "lambda_logs" {
+  name              = "/aws/lambda/${aws_lambda_function.this.function_name}"
+  retention_in_days = 14
+}
+
+# CloudWatch Alarm: Lambda Function Errors
+resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
+  alarm_name          = "infra-scheduler-lambda-errors"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "This metric monitors lambda errors"
+
+  dimensions = {
+    FunctionName = aws_lambda_function.this.function_name
+  }
+
+  treat_missing_data = "notBreaching"
+}
+
+# CloudWatch Alarm: Lambda Function Duration (close to timeout)
+resource "aws_cloudwatch_metric_alarm" "lambda_duration" {
+  alarm_name          = "infra-scheduler-lambda-duration"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "2"
+  metric_name         = "Duration"
+  namespace           = "AWS/Lambda"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "25000" # 25 seconds (close to 30s timeout)
+  alarm_description   = "This metric monitors lambda execution duration"
+
+  dimensions = {
+    FunctionName = aws_lambda_function.this.function_name
+  }
+
+  treat_missing_data = "notBreaching"
+}
+
+# CloudWatch Alarm: Lambda Function Throttles
+resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
+  alarm_name          = "infra-scheduler-lambda-throttles"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "Throttles"
+  namespace           = "AWS/Lambda"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "This metric monitors lambda throttles"
+
+  dimensions = {
+    FunctionName = aws_lambda_function.this.function_name
+  }
+
+  treat_missing_data = "notBreaching"
+}
+
+# CloudWatch Alarm: EventBridge Scheduler Failed Invocations
+resource "aws_cloudwatch_metric_alarm" "scheduler_failed_invocations" {
+  alarm_name          = "infra-scheduler-failed-invocations"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "FailedInvocations"
+  namespace           = "AWS/Scheduler"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "This metric monitors EventBridge Scheduler failed invocations"
+
+  dimensions = {
+    ScheduleGroup = aws_scheduler_schedule_group.infra-schedule-group.name
+  }
+
+  treat_missing_data = "notBreaching"
+}
