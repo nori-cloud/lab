@@ -21,7 +21,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Name = "nori-infra"
+      Namespace = "nori-infra"
     }
   }
 }
