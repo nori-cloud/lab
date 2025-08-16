@@ -1,7 +1,6 @@
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "0 12 * * 5,6"
+    - cron: "15 0 * * SAT,SUN"
 
 jobs:
   shutdown:
