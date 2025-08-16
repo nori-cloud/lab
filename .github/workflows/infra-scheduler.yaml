@@ -1,0 +1,96 @@
+name: Infra Scheduler
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        required: true
+        type: choice
+        default: "plan"
+        options:
+          - plan
+          - apply
+          - destroy
+
+defaults:
+  run:
+    working-directory: ./cloud/aws
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+        
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.10.5
+
+      - run: |
+          tofu init
+          tofu validate
+      
+      - run: |
+          tofu plan -out=plan
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plan
+          path: plan
+
+  apply:
+    needs: plan
+    if: ${{ inputs.action == "apply"}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: plan
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+        
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.10.5
+
+      - run: |
+          tofu init
+          tofu apply -input=plan
+
+  destroy:
+    if: ${{ inputs.action == "destroy"}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+        
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.10.5
+
+      - run: |
+          tofu init
+          tofu destroy -auto-approve
