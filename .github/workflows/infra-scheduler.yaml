@@ -18,7 +18,7 @@ defaults:
 
 jobs:
   plan:
-    if: ${{ github.event.inputs.action == "plan" || github.event.inputs.action == "apply" }}
+    if: github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -51,7 +51,7 @@ jobs:
 
   apply:
     needs: plan
-    if: ${{ github.event.inputs.action == "apply"}}
+    if: github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -76,7 +76,7 @@ jobs:
           tofu apply -input=plan
 
   destroy:
-    if: ${{ github.event.inputs.action == "destroy"}}
+    if: github.event.inputs.action == 'destroy'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
