@@ -4,14 +4,11 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./cloud
     permissions:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - id: creds
         uses: aws-actions/configure-aws-credentials@v4.3.1
@@ -31,7 +28,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.AWS_ECR_REGISTRY}}/${{ vars.INFRA_SCHEDULER_IMAGE_NAME}}
+          context: ./cloud
+          images: ${{ vars.AWS_ECR_REGISTRY}}/${{ vars.INFRA_SCHEDULER_IMAGE_NAME }}
           tags: |
             type=raw,value=latest
             type=sha
