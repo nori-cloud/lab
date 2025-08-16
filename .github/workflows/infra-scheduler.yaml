@@ -59,6 +59,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
+        with:
+          name: plan
+          path: ./cloud/aws/plan
       
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4.3.1
