@@ -157,21 +157,21 @@ resource "aws_scheduler_schedule_group" "infra-schedule-group" {
   name = "infra-schedule-group"
 }
 
-resource "aws_scheduler_schedule" "infra_test_schedule" {
-  name       = "infra-schedule-test"
-  group_name = aws_scheduler_schedule_group.infra-schedule-group.name
+# resource "aws_scheduler_schedule" "infra_test_schedule" {
+#   name       = "infra-schedule-test"
+#   group_name = aws_scheduler_schedule_group.infra-schedule-group.name
 
-  flexible_time_window {
-    mode = "OFF"
-  }
+#   flexible_time_window {
+#     mode = "OFF"
+#   }
 
-  schedule_expression = "cron(*/5 * * * ? *)"
+#   schedule_expression = "cron(*/5 * * * ? *)"
 
-  target {
-    arn      = aws_lambda_function.this.arn
-    role_arn = aws_iam_role.eb_scheduler_execution_role.arn
-  }
-}
+#   target {
+#     arn      = aws_lambda_function.this.arn
+#     role_arn = aws_iam_role.eb_scheduler_execution_role.arn
+#   }
+# }
 
 resource "aws_scheduler_schedule" "infra_start_up_schedule" {
   name       = "infra-schedule-start-up"
