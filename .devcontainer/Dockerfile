@@ -5,6 +5,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     git \
     sudo \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/opentofu/opentofu:minimal /usr/local/bin/tofu /usr/local/bin/tofu
