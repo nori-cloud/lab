@@ -56,6 +56,39 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+# SQS Dead Letter Queue
+resource "aws_sqs_queue" "dlq" {
+  name                      = "infra-scheduler-trigger-dlq"
+  message_retention_seconds = 1209600 # 14 days
+  
+  tags = {
+    Purpose = "Dead letter queue for scheduler Lambda failures"
+  }
+}
+
+# IAM policy for Lambda to send messages to DLQ
+data "aws_iam_policy_document" "lambda_dlq_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sqs:SendMessage"
+    ]
+    resources = [
+      aws_sqs_queue.dlq.arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "lambda_dlq_policy" {
+  name   = "lambda-dlq-policy"
+  policy = data.aws_iam_policy_document.lambda_dlq_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_dlq_policy" {
+  role       = aws_iam_role.this.name
+  policy_arn = aws_iam_policy.lambda_dlq_policy.arn
+}
+
 resource "aws_lambda_function" "this" {
   function_name = "infra-scheduler-trigger"
   role          = aws_iam_role.this.arn
@@ -64,6 +97,10 @@ resource "aws_lambda_function" "this" {
 
   memory_size = 512
   timeout     = 30
+
+  dead_letter_config {
+    target_arn = aws_sqs_queue.dlq.arn
+  }
 }
 
 resource "aws_lambda_permission" "allow_eventbridge_scheduler" {
@@ -245,6 +282,25 @@ resource "aws_cloudwatch_metric_alarm" "scheduler_failed_invocations" {
 
   dimensions = {
     ScheduleGroup = aws_scheduler_schedule_group.infra-schedule-group.name
+  }
+
+  treat_missing_data = "notBreaching"
+}
+
+# CloudWatch Alarm: DLQ Messages (indicates Lambda failures)
+resource "aws_cloudwatch_metric_alarm" "dlq_messages" {
+  alarm_name          = "infra-scheduler-dlq-messages"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "ApproximateNumberOfVisibleMessages"
+  namespace           = "AWS/SQS"
+  period              = "300"
+  statistic           = "Average"
+  threshold           = "0"
+  alarm_description   = "This metric monitors DLQ for failed Lambda executions"
+
+  dimensions = {
+    QueueName = aws_sqs_queue.dlq.name
   }
 
   treat_missing_data = "notBreaching"
