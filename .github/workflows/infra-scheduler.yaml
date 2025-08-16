@@ -72,8 +72,6 @@ jobs:
           tofu_version: 1.10.5
 
       - run: |
-          ls -la $GITHUB_WORKSPACE
-          ls -la
           tofu init
           tofu apply plan
 
