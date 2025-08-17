@@ -1,11 +1,24 @@
-name: Build and Push Infra Scheduler to ECR
+name: Build and Deploy Infra Scheduler
 
 on:
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy to AWS after building'
+        required: false
+        default: false
+        type: boolean
+
+defaults:
+  run:
+    working-directory: ./cloud/scheduler-trigger
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      sha-tag: ${{ github.sha }}
     permissions:
       contents: read
       id-token: write
@@ -45,3 +58,45 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    needs: build-and-push
+    if: github.event.inputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          audience: sts.amazonaws.com
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.10.5
+
+      - name: Verify Build Output
+        run: |
+          echo "Build job outputs:"
+          echo "SHA tag: ${{ needs.build-and-push.outputs.sha-tag }}"
+          echo "Image tags: ${{ needs.build-and-push.outputs.image-tag }}"
+          echo ""
+          echo "Verifying image exists in ECR..."
+          aws ecr describe-images \
+            --repository-name ${{ vars.INFRA_SCHEDULER_IMAGE_NAME }} \
+            --image-ids imageTag=${{ needs.build-and-push.outputs.sha-tag }} \
+            --region ${{ vars.AWS_REGION }}
+
+      - name: OpenTofu Init
+        run: tofu init
+
+      - name: OpenTofu Plan
+        run: tofu plan -var="image_tag=${{ needs.build-and-push.outputs.sha-tag }}"
+
+      - name: OpenTofu Apply
+        run: tofu apply -var="image_tag=${{ needs.build-and-push.outputs.sha-tag }}" -auto-approve

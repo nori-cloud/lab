@@ -16,6 +16,17 @@ terraform {
   required_version = "1.10.5"
 }
 
+variable "image_tag" {
+  description = "Docker image tag for the Lambda function (git commit SHA or version)"
+  type        = string
+  default     = "latest"
+  
+  validation {
+    condition     = length(var.image_tag) > 0
+    error_message = "Image tag cannot be empty."
+  }
+}
+
 provider "aws" {
   region = "ap-southeast-2"
 
@@ -127,7 +138,7 @@ resource "aws_lambda_function" "this" {
   function_name = "infra-scheduler-trigger"
   role          = aws_iam_role.this.arn
   package_type  = "Image"
-  image_uri     = "${aws_ecr_repository.this.repository_url}:latest"
+  image_uri     = "${aws_ecr_repository.this.repository_url}:${var.image_tag}"
 
   memory_size = 512
   timeout     = 30
