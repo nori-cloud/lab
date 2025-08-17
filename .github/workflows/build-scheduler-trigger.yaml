@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image-tag: ${{ steps.meta.outputs.tags }}
-      sha-tag: ${{ github.sha }}
+      sha-tag: ${{ steps.extract-sha-tag.outputs.sha-tag }}
     permissions:
       contents: read
       id-token: write
@@ -58,6 +58,14 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Extract SHA tag
+        id: extract-sha-tag
+        run: |
+          # Extract the sha tag from the metadata output
+          SHA_TAG=$(echo "${{ steps.meta.outputs.tags }}" | grep -o 'sha-[a-f0-9]\{7\}' | head -1)
+          echo "sha-tag=$SHA_TAG" >> $GITHUB_OUTPUT
+          echo "Extracted SHA tag: $SHA_TAG"
 
   deploy:
     needs: build-and-push
