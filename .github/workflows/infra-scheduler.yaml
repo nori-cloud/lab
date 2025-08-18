@@ -111,17 +111,17 @@ jobs:
     runs-on: curlimages/curl:latest
     steps:
       - run: |
-          case_msg=""
+          MSG=""
           case "${{ github.event.inputs.action }}" in
             "plan")
-              case_msg="finish planning with status of ${{ needs.plan.result }}."
+              MSG="finish planning with status of ${{ needs.plan.result }}."
               ;;
             "apply")
-              case_msg="finish applying with status of ${{ needs.apply.result }}."
+              MSG="finish applying with status of ${{ needs.apply.result }}."
               ;;
             "destroy")
-              case_msg="finish destroying with status of ${{ needs.destroy.result }}."
+              MSG="finish destroying with status of ${{ needs.destroy.result }}."
               ;;
           esac
-          curl -X POST -H "Content-Type: application/json" -d '{"content": "${{ case_msg }} meow 🐱"}' ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d '{"content": "$MSG meow 🐱"}' ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
