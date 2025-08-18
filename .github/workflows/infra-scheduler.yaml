@@ -48,6 +48,7 @@ jobs:
         with:
           name: plan-${{ github.run_id }}
           path: ./cloud/aws/plan-${{ github.run_id }}
+          retention-days: 7
 
   apply:
     needs: plan
