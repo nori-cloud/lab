@@ -6,7 +6,7 @@ services:
     command: sleep infinity
     volumes:
       - ../..:/workspace:cached
-      - workspace_config:/root/
+      - workspace_config_277549:/home/node/
 
 volumes:
-  workspace_config:
+  workspace_config_277549:

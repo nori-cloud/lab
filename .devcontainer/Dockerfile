@@ -1,12 +1,3 @@
-FROM --platform=linux/amd64 ubuntu:24.04
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl \
-    git \
-    sudo \
-    python3 \
-    python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+FROM --platform=linux/amd64 mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
 
 COPY --from=ghcr.io/opentofu/opentofu:minimal /usr/local/bin/tofu /usr/local/bin/tofu
