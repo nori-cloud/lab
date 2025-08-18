@@ -104,3 +104,24 @@ jobs:
       - run: |
           tofu init
           tofu destroy -auto-approve
+  
+  notify:
+    if: ${{ always() }}
+    needs: [plan, apply, destroy]
+    runs-on: curlimages/curl:latest
+    steps:
+      - run: |
+          case_msg=""
+          case "${{ github.event.inputs.action }}" in
+            "plan")
+              case_msg="finish planning with status of ${{ needs.plan.result }}."
+              ;;
+            "apply")
+              case_msg="finish applying with status of ${{ needs.apply.result }}."
+              ;;
+            "destroy")
+              case_msg="finish destroying with status of ${{ needs.destroy.result }}."
+              ;;
+          esac
+          curl -X POST -H "Content-Type: application/json" -d '{"content": "${{ case_msg }} meow 🐱"}' ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+  
