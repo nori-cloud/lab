@@ -198,4 +198,7 @@ resource "aws_iam_role_policy_attachment" "github_actions_policy_attachment" {
   policy_arn = aws_iam_policy.github_actions_policy.arn
 }
 
-data "aws_caller_identity" "current" {}
+output "scheduler_trigger_ga_role_arn" {
+  value = aws_iam_role.scheduler_trigger_ga_role.arn
+  description = "ARN of the GitHub Actions role for the scheduler trigger action"
+}

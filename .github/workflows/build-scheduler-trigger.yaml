@@ -82,7 +82,7 @@ jobs:
         with:
           audience: sts.amazonaws.com
           aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: arn:aws:iam::442228337792:role/infra-scheduler-trigger-ga-role
 
       - uses: opentofu/setup-opentofu@v1
         with:
