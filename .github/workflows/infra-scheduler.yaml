@@ -108,7 +108,7 @@ jobs:
   notify:
     if: ${{ always() }}
     needs: [plan, apply, destroy]
-    runs-on: curlimages/curl:latest
+    runs-on: ubuntu-latest
     steps:
       - run: |
           MSG=""
