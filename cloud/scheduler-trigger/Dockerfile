@@ -1,12 +1,20 @@
-# testing cmds
-# docker buildx build --platform linux/amd64 --provenance=false -t infra-scheduler:local .
-# docker run --platform linux/amd64 -p 9000:8080 infra-scheduler:local
-# curl "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{}'
+FROM public.ecr.aws/lambda/nodejs:22 AS builder
+WORKDIR /usr/app
 
-FROM public.ecr.aws/lambda/python:3.12
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
-COPY . ${LAMBDA_TASK_ROOT}
+COPY package.json .
+COPY pnpm-lock.yaml .
+COPY src ./src
+COPY tsup.config.ts ./tsup.config.ts
 
-RUN pip install -r requirements.txt
+RUN pnpm install --frozen-lockfile
+RUN pnpm run build
+    
+FROM public.ecr.aws/lambda/nodejs:22
+WORKDIR ${LAMBDA_TASK_ROOT}
 
-CMD [ "scheduler.handler" ]
+COPY --from=builder /usr/app/dist/* ./
+CMD ["index.handler"]
