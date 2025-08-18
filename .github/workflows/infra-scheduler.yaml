@@ -127,5 +127,5 @@ jobs:
               MSG="finish destroying with status of ${{ needs.destroy.result }}."
               ;;
           esac
-          curl -X POST -H "Content-Type: application/json" -d '{"content": "$MSG meow 🐱"}' ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
