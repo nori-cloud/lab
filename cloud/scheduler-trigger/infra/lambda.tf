@@ -36,7 +36,7 @@ resource "aws_lambda_function" "this" {
 
   environment {
     variables = {
-      DISCORD_WEBHOOK_URL = aws_ssm_parameter.discord_webhook_url.value
+      DISCORD_MESSAGE_WEBHOOK = aws_ssm_parameter.discord_message_webhook.value
       GITHUB_TOKEN        = aws_ssm_parameter.github_token.value
       GITHUB_WORKFLOW_ID  = aws_ssm_parameter.github_workflow_id.value
       GITHUB_WORKFLOW_REF = aws_ssm_parameter.github_workflow_ref.value
