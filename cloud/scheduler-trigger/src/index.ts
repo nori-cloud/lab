@@ -21,7 +21,7 @@ export async function handler({ action }: TriggerEvent): Promise<APIGatewayProxy
 
 async function triggerSchedule(action: TriggerAction) {
   try {
-    console.debug(`Preparing to trigger GitHub API Request for workflow "${Env.GitHub.Workflow.Id}"...`)
+    console.debug(`Preparing to trigger GitHub API Request for workflow "${Env.GitHub.Workflow.Id}" on "${Env.GitHub.Workflow.Ref}"...`)
     const response = await fetch(`https://api.github.com/repos/nori-cloud/infra/actions/workflows/${Env.GitHub.Workflow.Id}/dispatches`, {
       method: "POST",
       headers: {
