@@ -31,7 +31,6 @@ resource "aws_iam_role" "scheduler_trigger_ga_role" {
 }
 
 data "aws_iam_policy_document" "github_actions_permissions" {
-  # ECR permissions for building and pushing images
   statement {
     effect = "Allow"
     actions = [
@@ -48,12 +47,12 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "ecr:DescribeRepositories",
       "ecr:DescribeImages",
       "ecr:CreateRepository",
+      "ecr:GetLifecyclePolicy",
       "ecr:PutLifecyclePolicy"
     ]
     resources = ["*"]
   }
 
-  # Lambda permissions
   statement {
     effect = "Allow"
     actions = [
@@ -61,17 +60,18 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "lambda:UpdateFunctionCode",
       "lambda:UpdateFunctionConfiguration",
       "lambda:GetFunction",
+      "lambda:GetPolicy",
       "lambda:DeleteFunction",
       "lambda:AddPermission",
       "lambda:RemovePermission",
       "lambda:ListFunctions",
+      "lambda:ListVersionsByFunction",
       "lambda:TagResource",
       "lambda:UntagResource"
     ]
     resources = ["*"]
   }
 
-  # IAM permissions for creating roles and policies
   statement {
     effect = "Allow"
     actions = [
@@ -98,7 +98,6 @@ data "aws_iam_policy_document" "github_actions_permissions" {
     resources = ["*"]
   }
 
-  # SQS permissions for DLQ
   statement {
     effect = "Allow"
     actions = [
@@ -109,12 +108,11 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "sqs:TagQueue",
       "sqs:UntagQueue",
       "sqs:ListQueues",
-      "sqs:listqueuetags",
+      "sqs:ListQueueTags",
     ]
     resources = ["*"]
   }
 
-  # EventBridge Scheduler permissions
   statement {
     effect = "Allow"
     actions = [
@@ -134,7 +132,6 @@ data "aws_iam_policy_document" "github_actions_permissions" {
     resources = ["*"]
   }
 
-  # CloudWatch permissions for logs and alarms
   statement {
     effect = "Allow"
     actions = [
@@ -144,16 +141,17 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "logs:PutRetentionPolicy",
       "logs:TagLogGroup",
       "logs:UntagLogGroup",
+      "logs:ListTagsForResource",
       "cloudwatch:PutMetricAlarm",
       "cloudwatch:DeleteAlarms",
       "cloudwatch:DescribeAlarms",
       "cloudwatch:TagResource",
-      "cloudwatch:UntagResource"
+      "cloudwatch:UntagResource",
+      "cloudwatch:ListTagsForResource"
     ]
     resources = ["*"]
   }
 
-  # S3 permissions for Terraform state
   statement {
     effect = "Allow"
     actions = [
@@ -168,18 +166,19 @@ data "aws_iam_policy_document" "github_actions_permissions" {
     ]
   }
 
-  # DynamoDB permissions for Terraform state locking (if using)
   statement {
     effect = "Allow"
     actions = [
-      "dynamodb:GetItem",
-      "dynamodb:PutItem",
-      "dynamodb:DeleteItem"
+      "ssm:GetParameter",
+      "ssm:GetParameters",
+      "ssm:PutParameter",
+      "ssm:DeleteParameter",
+      "ssm:DescribeParameters",
+      "ssm:ListTagsForResource"
     ]
-    resources = ["arn:aws:dynamodb:*:*:table/terraform-locks"]
+    resources = ["*"]
   }
 
-  # General permissions for resource discovery
   statement {
     effect = "Allow"
     actions = [
