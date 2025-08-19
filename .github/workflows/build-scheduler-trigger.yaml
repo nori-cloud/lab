@@ -1,6 +1,9 @@
 name: Build and Deploy Infra Scheduler
 
 on:
+  push:
+    paths:
+      - 'cloud/scheduler-trigger/src/**'
   workflow_dispatch:
     inputs:
       deploy:
