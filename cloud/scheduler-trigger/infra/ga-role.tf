@@ -35,6 +35,7 @@ data "aws_iam_policy_document" "github_actions_permissions" {
   statement {
     effect = "Allow"
     actions = [
+      "ecr:ListTagsForResource",
       "ecr:GetAuthorizationToken",
       "ecr:BatchCheckLayerAvailability",
       "ecr:GetDownloadUrlForLayer",
@@ -78,6 +79,7 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "iam:DeleteRole",
       "iam:GetRole",
       "iam:ListRoles",
+      "iam:ListRolePolicies",
       "iam:UpdateRole",
       "iam:AttachRolePolicy",
       "iam:DetachRolePolicy",
@@ -106,7 +108,8 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "sqs:SetQueueAttributes",
       "sqs:TagQueue",
       "sqs:UntagQueue",
-      "sqs:ListQueues"
+      "sqs:ListQueues",
+      "sqs:listqueuetags",
     ]
     resources = ["*"]
   }
@@ -125,6 +128,7 @@ data "aws_iam_policy_document" "github_actions_permissions" {
       "scheduler:GetScheduleGroup",
       "scheduler:ListScheduleGroups",
       "scheduler:TagResource",
+      "scheduler:ListTagsForResource",
       "scheduler:UntagResource"
     ]
     resources = ["*"]
@@ -199,6 +203,6 @@ resource "aws_iam_role_policy_attachment" "github_actions_policy_attachment" {
 }
 
 output "scheduler_trigger_ga_role_arn" {
-  value = aws_iam_role.scheduler_trigger_ga_role.arn
+  value       = aws_iam_role.scheduler_trigger_ga_role.arn
   description = "ARN of the GitHub Actions role for the scheduler trigger action"
 }
