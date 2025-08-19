@@ -4,14 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       deploy:
-        description: 'Deploy to AWS after building'
+        description: "Deploy to AWS after building"
         required: false
         default: false
         type: boolean
-
-defaults:
-  run:
-    working-directory: ./cloud/scheduler-trigger
 
 jobs:
   build-and-push:
@@ -71,6 +67,9 @@ jobs:
     needs: build-and-push
     if: github.event.inputs.deploy == 'true'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./cloud/scheduler-trigger/infra
     permissions:
       contents: read
       id-token: write
@@ -108,3 +107,20 @@ jobs:
 
       - name: OpenTofu Apply
         run: tofu apply -var="image_tag=${{ needs.build-and-push.outputs.sha-tag }}" -auto-approve
+
+  notify:
+    if: ${{ always() }}
+    needs: [build-and-push, deploy]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - run: |
+          MSG=""
+          if [ ${{ github.event.inputs.deploy }} == "true" ]; then
+            MSG="finish deploying with status of ${{ needs.deploy.result }}."
+          else
+            MSG="finish building with status of ${{ needs.build-and-push.result }}."
+          fi
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
