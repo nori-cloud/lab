@@ -3,16 +3,11 @@ import { Env } from "./env";
 
 type TriggerAction = "plan" | "apply" | "destroy"
 type TriggerEvent = {
-  ref: string;
-  inputs: {
-    action: TriggerAction
-  }
+  action: TriggerAction
 }
 
-export async function handler(event: TriggerEvent): Promise<APIGatewayProxyResult> {
+export async function handler({ action }: TriggerEvent): Promise<APIGatewayProxyResult> {
   console.log("Starting Lambda Infra Scheduler Trigger");
-
-  const { action } = event.inputs
 
   await triggerSchedule(action)
 
@@ -46,7 +41,7 @@ async function triggerSchedule(action: TriggerAction) {
       await notifyTrigger(`Uh oh, something went wrong when triggering "${Env.GitHub.Workflow.Id}" with "${action}" action.`)
       throw new Error("GitHub API Request failed")
     }
-    
+
     await notifyTrigger(`"${Env.GitHub.Workflow.Id}" is triggered with "${action}" action.`)
     console.debug(`Workflow "${Env.GitHub.Workflow.Id}" triggered successfully`)
   } catch (err) {
