@@ -7,7 +7,7 @@ resource "aws_ssm_parameter" "discord_message_webhook" {
 resource "aws_ssm_parameter" "github_token" {
   name  = "/infra-scheduler-trigger/config/github_token"
   type  = "String"
-  value = "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"
+  value = "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"
 }
 
 resource "aws_ssm_parameter" "github_workflow_id" {
