@@ -5,12 +5,6 @@ on:
     paths:
       - 'cloud/scheduler-trigger/src/**'
   workflow_dispatch:
-    inputs:
-      deploy:
-        description: "Deploy to AWS after building"
-        required: false
-        default: false
-        type: boolean
 
 jobs:
   build-and-push:
@@ -68,7 +62,6 @@ jobs:
 
   deploy:
     needs: build-and-push
-    if: github.event.inputs.deploy == 'true'
     runs-on: ubuntu-latest
     defaults:
       run:
