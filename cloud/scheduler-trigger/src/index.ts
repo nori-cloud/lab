@@ -64,7 +64,7 @@ async function notifyTrigger(content: string) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        content: `${content} meow 🐱`
+        content: `[Nori-Cloud: Infra Scheduler] ${content} meow 🐱`
       })
     })
 

@@ -126,4 +126,4 @@ jobs:
           else
             MSG="finish building with status of ${{ needs.build-and-push.result }}."
           fi
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Scheduler Build and Deploy Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
