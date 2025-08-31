@@ -11,8 +11,8 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"hashicorp.terraform",
-				"sleistner.vscode-fileutils"
+				"sleistner.vscode-fileutils",
+				"opentofu.vscode-opentofu"
 			]
 		}
 	},
