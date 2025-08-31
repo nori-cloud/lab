@@ -26,16 +26,16 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.public_subnets
 
-  depends_on = [ 
+  depends_on = [
     module.vpc
   ]
 }
 
 resource "aws_eks_access_entry" "iam_role" {
-  cluster_name      = module.eks.cluster_name
-  principal_arn     = local.cluster.admin_role
-  type              = "STANDARD"
-  
+  cluster_name  = module.eks.cluster_name
+  principal_arn = local.cluster.admin_role
+  type          = "STANDARD"
+
   depends_on = [module.eks]
 }
 
@@ -43,10 +43,10 @@ resource "aws_eks_access_policy_association" "iam_role_policy" {
   cluster_name  = module.eks.cluster_name
   principal_arn = local.cluster.admin_role
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
-  
+
   access_scope {
     type = "cluster"
   }
-  
+
   depends_on = [aws_eks_access_entry.iam_role]
 }

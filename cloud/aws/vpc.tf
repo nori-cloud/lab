@@ -4,8 +4,8 @@ module "vpc" {
   name = "${local.name}-vpc"
   cidr = local.vpc.cidr
 
-  azs             = local.azs
-  public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc.cidr, 8, k)]
+  azs            = local.azs
+  public_subnets = [for k, v in local.azs : cidrsubnet(local.vpc.cidr, 8, k)]
 
   // this is presumably cheaper when we have less than ~8 ec2 instances
   map_public_ip_on_launch = true
