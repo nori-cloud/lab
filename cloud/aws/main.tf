@@ -31,40 +31,21 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Namespace = "nori-infra"
+      Namespace = "${local.name}-infra"
     }
   }
-}
-
-provider "helm" {
-  kubernetes = {
-    config_path = "~/.kube/config"
-  }
-
-  registries = [
-    {
-      url      = "oci://localhost:5000"
-      username = "username"
-      password = "password"
-    },
-    {
-      url      = "oci://private.registry"
-      username = "username"
-      password = "password"
-    }
-  ]
 }
 
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
-
 locals {
+    name = "nori-cloud"
     azs = data.aws_availability_zones.available.names
     cluster = {
-        name = "nori-cluster"
         version = "1.33"
+        admin_role = "arn:aws:iam::442228337792:role/aws-reserved/sso.amazonaws.com/ap-southeast-2/AWSReservedSSO_AdministratorAccess_38aa147304c4b3e0"
     }
     vpc = {
         cidr = "10.0.0.0/16"

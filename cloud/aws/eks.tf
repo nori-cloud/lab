@@ -1,118 +1,52 @@
-resource "aws_eks_cluster" "example" {
-  name = local.cluster.name
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 21.0"
 
-  access_config {
-    authentication_mode = "API"
+  name               = "${local.name}-cluster"
+  kubernetes_version = local.cluster.version
+
+  endpoint_public_access = true
+
+  compute_config = {
+    enabled    = true
+    node_pools = ["general-purpose"]
   }
 
-  # Ensure that IAM Role permissions are created before and deleted
-  # after EKS Cluster handling. Otherwise, EKS will not be able to
-  # properly delete EKS managed EC2 infrastructure such as Security Groups.
-  depends_on = [
-    aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.cluster_AmazonEKSComputePolicy,
-    aws_iam_role_policy_attachment.cluster_AmazonEKSBlockStoragePolicy,
-    aws_iam_role_policy_attachment.cluster_AmazonEKSLoadBalancingPolicy,
-    aws_iam_role_policy_attachment.cluster_AmazonEKSNetworkingPolicy,
+  addons = {
+    external-dns = {
+      pod_identity_association = [
+        {
+          role_arn        = aws_iam_role.external_dns.arn
+          service_account = "external-dns"
+        }
+      ]
+    }
+  }
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.public_subnets
+
+  depends_on = [ 
+    module.vpc
   ]
+}
 
-  role_arn = aws_iam_role.cluster.arn
-  version  = local.cluster.version
+resource "aws_eks_access_entry" "iam_role" {
+  cluster_name      = module.eks.cluster_name
+  principal_arn     = local.cluster.admin_role
+  type              = "STANDARD"
+  
+  depends_on = [module.eks]
+}
 
-  bootstrap_self_managed_addons = false
-
-  compute_config {
-    enabled       = true
-    node_pools    = ["general-purpose"]
-    node_role_arn = aws_iam_role.node.arn
+resource "aws_eks_access_policy_association" "iam_role_policy" {
+  cluster_name  = module.eks.cluster_name
+  principal_arn = local.cluster.admin_role
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  
+  access_scope {
+    type = "cluster"
   }
-
-  kubernetes_network_config {
-    elastic_load_balancing {
-      enabled = true
-    }
-  }
-
-  storage_config {
-    block_storage {
-      enabled = true
-    }
-  }
-
-  vpc_config {
-    endpoint_private_access = true
-    endpoint_public_access  = true
-
-    subnet_ids = [for s in aws_subnet.this : s.id]
-  }
-}
-
-resource "aws_iam_role" "node" {
-  name = "${local.cluster.name}-auto-node"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = ["sts:AssumeRole"]
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "node_AmazonEKSWorkerNodeMinimalPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodeMinimalPolicy"
-  role       = aws_iam_role.node.name
-}
-
-resource "aws_iam_role_policy_attachment" "node_AmazonEC2ContainerRegistryPullOnly" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
-  role       = aws_iam_role.node.name
-}
-
-resource "aws_iam_role" "cluster" {
-  name = "${local.cluster.name}-cluster"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = [
-          "sts:AssumeRole",
-          "sts:TagSession"
-        ]
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSClusterPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSComputePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSComputePolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSBlockStoragePolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSBlockStoragePolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSLoadBalancingPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSLoadBalancingPolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_AmazonEKSNetworkingPolicy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSNetworkingPolicy"
-  role       = aws_iam_role.cluster.name
+  
+  depends_on = [aws_eks_access_entry.iam_role]
 }
