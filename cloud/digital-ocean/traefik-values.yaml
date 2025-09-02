@@ -1,0 +1,49 @@
+additionalArguments:
+ - "--certificatesresolvers.route53.acme.email=norris.wu.au@outlook.com"
+ - "--certificatesresolvers.route53.acme.storage=/data/acme.json"
+ - "--certificatesresolvers.route53.acme.dnschallenge.provider=route53"
+
+env:
+  - name: AWS_ACCESS_KEY_ID
+    valueFrom:
+      secretKeyRef:
+        name: aws-credentials
+        key: access-key-id
+  - name: AWS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: aws-credentials
+        key: secret-access-key
+
+  - name: AWS_DEFAULT_REGION
+    value: "ap-southeast-2"
+
+service:
+  annotatations:
+    external-dns.alpha.kubernetes.io/hostname: "*.wuzone.click"
+
+logs:
+  general:
+    level: DEBUG
+
+ports:
+  web:
+    port: 8000
+  websecure:
+    port: 8443
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    entryPoints:
+      - web
+    matchRule: Host(`traefik.wuzone.click`)
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: "do-block-storage"
