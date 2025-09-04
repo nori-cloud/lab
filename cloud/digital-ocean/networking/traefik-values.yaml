@@ -1,0 +1,37 @@
+additionalArguments:
+ - "--certificatesresolvers.cloudflare.acme.email=norris.wu.au@outlook.com"
+ - "--certificatesresolvers.cloudflare.acme.storage=/data/acme.json"
+ - "--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare"
+
+env:
+  - name: CLOUDFLARE_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-creds
+        key: cloudflare_api_token
+
+service:
+  annotatations:
+    external-dns.alpha.kubernetes.io/hostname: "*.norriswu.me"
+
+ports:
+  web:
+    port: 8000
+  websecure:
+    port: 8443
+
+ingressRoute:
+  dashboard:
+    enabled: true
+    entryPoints:
+      - web
+    matchRule: Host(`traefik.norriswu.me`)
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: "do-block-storage"
