@@ -41,19 +41,7 @@ resource "helm_release" "external-dns" {
   chart      = "external-dns"
   version    = "9.0.3"
 
-  set = [
-    { name  = "namespace"
-      value = kubernetes_namespace.networking_ns.metadata[0].name
-    },
-    {
-      name  = "provider"
-      value = "cloudflare"
-    },
-    {
-      name  = "cloudflare.secretName"
-      value = kubernetes_secret.cloudflare_creds.metadata[0].name
-    }
-  ]
+  values = [file("${path.module}/external-dns-values.yaml")]
 }
 
 resource "helm_release" "traefik" {
