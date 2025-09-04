@@ -13,15 +13,18 @@ terraform {
       version = "3.0.2"
     }
   }
+
+  backend "s3" {
+    bucket       = "infra-tf-033b4055b800d083"
+    key          = "infra-do/terraform.tfstate"
+    region       = "ap-southeast-2"
+    use_lockfile = true
+  }
 }
 
 variable "do_token" {
   type = string
 }
-
-# variable "aws_region" {
-#   type = string
-# }
 
 provider "digitalocean" {
   token = var.do_token
@@ -76,7 +79,7 @@ provider "helm" {
 }
 
 variable "cloudflare_dns_admin_token" {
-  type      =  string
+  type      = string
   sensitive = true
 }
 
