@@ -21,14 +21,10 @@ ports:
   websecure:
     port: 8443
 
-ingressRoute:
-  dashboard:
-    enabled: true
-    entryPoints:
-      - web
-      - websecure
-    matchRule: Host(`traefik.norriswu.me`)
-
 ingressClass:
   enabled: true
   isDefaultClass: true
+
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true
