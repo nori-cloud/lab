@@ -46,3 +46,8 @@ module "networking" {
 
   cloudflare_dns_admin_token = var.cloudflare_dns_admin_token
 }
+
+module "butler" {
+  depends_on = [module.networking]
+  source     = "./butler"
+}

@@ -1,6 +1,6 @@
 resource "kubernetes_deployment" "whoami" {
   metadata {
-    name = "whoami"
+    name      = "whoami"
     namespace = kubernetes_namespace.this.metadata[0].name
   }
   spec {
@@ -18,7 +18,7 @@ resource "kubernetes_deployment" "whoami" {
       }
       spec {
         container {
-          name = "whoami"
+          name  = "whoami"
           image = "traefik/whoami"
           port {
             container_port = 80
@@ -31,7 +31,7 @@ resource "kubernetes_deployment" "whoami" {
 
 resource "kubernetes_service" "whoami" {
   metadata {
-    name = "whoami"
+    name      = "whoami"
     namespace = kubernetes_namespace.this.metadata[0].name
   }
   spec {
@@ -46,12 +46,12 @@ resource "kubernetes_service" "whoami" {
 
 resource "kubernetes_manifest" "whoami" {
   manifest = {
-  
+
     apiVersion = "traefik.io/v1alpha1"
-    kind = "IngressRoute"
+    kind       = "IngressRoute"
 
     metadata = {
-      name = "whoami"
+      name      = "whoami"
       namespace = kubernetes_namespace.this.metadata[0].name
     }
 
@@ -60,7 +60,7 @@ resource "kubernetes_manifest" "whoami" {
       routes = [
         {
           match = "Host(`whoami.norriswu.me`)"
-          kind = "Rule"
+          kind  = "Rule"
           services = [
             {
               name = "whoami"
