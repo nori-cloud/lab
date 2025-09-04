@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-resource "kubernetes_namespace" "networking_ns" {
+resource "kubernetes_namespace" "this" {
   metadata {
     name = "nori-net"
   }
@@ -23,7 +23,7 @@ variable "cloudflare_dns_admin_token" {
 resource "kubernetes_secret" "cloudflare_creds" {
   metadata {
     name      = "cloudflare-creds"
-    namespace = kubernetes_namespace.networking_ns.metadata[0].name
+    namespace = kubernetes_namespace.this.metadata[0].name
   }
 
   data = {
@@ -34,7 +34,7 @@ resource "kubernetes_secret" "cloudflare_creds" {
 resource "helm_release" "external-dns" {
   depends_on = [kubernetes_secret.cloudflare_creds]
 
-  namespace = kubernetes_namespace.networking_ns.metadata[0].name
+  namespace = kubernetes_namespace.this.metadata[0].name
 
   name       = "external-dns"
   repository = "https://charts.bitnami.com/bitnami"
@@ -47,7 +47,7 @@ resource "helm_release" "external-dns" {
 resource "helm_release" "traefik" {
   depends_on = [kubernetes_secret.cloudflare_creds]
 
-  namespace = kubernetes_namespace.networking_ns.metadata[0].name
+  namespace = kubernetes_namespace.this.metadata[0].name
 
   name       = "traefik"
   chart      = "traefik"
