@@ -12,98 +12,67 @@ on:
           - apply
           - destroy
 
+env:
+  TOFU_VERSION: 1.10.6
+
 defaults:
   run:
-    working-directory: ./cloud/aws
+    working-directory: ./cloud/digital-ocean
 
 jobs:
   plan:
     if: github.event.inputs.action == 'plan' || github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.3.1
-        with:
-          audience: sts.amazonaws.com
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
-        
       - uses: opentofu/setup-opentofu@v1
         with:
-          tofu_version: 1.10.5
+          tofu_version: ${{ env.TOFU_VERSION }}
 
-      - run: |
-          tofu init
-          tofu validate
-      
-      - run: |
-          tofu plan -out=plan-${{ github.run_id }}
-      
-      - uses: actions/upload-artifact@v4
-        with:
-          name: plan-${{ github.run_id }}
-          path: ./cloud/aws/plan-${{ github.run_id }}
-          retention-days: 7
+      - name: Configure Credentials
+        run: |
+          echo "do_token=$DO_TOKEN" >> creds.auto.tfvars
+          echo "cloudflare_dns_admin_token=$CLOUDFLARE_DNS_ADMIN_TOKEN" >> creds.auto.tfvars
+        env:
+          DO_TOKEN: ${{ secrets.DO_TOKEN }}
+          CLOUDFLARE_DNS_ADMIN_TOKEN: ${{ secrets.CLOUDFLARE_DNS_ADMIN_TOKEN }}
+
+      - name: Plan Infrastructure
+        run: |
+          ./bootstrap.sh
 
   apply:
     needs: plan
     if: github.event.inputs.action == 'apply'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: plan-${{ github.run_id }}
-          path: ./cloud/aws
-          
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.3.1
-        with:
-          audience: sts.amazonaws.com
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
-        
       - uses: opentofu/setup-opentofu@v1
         with:
-          tofu_version: 1.10.5
+          tofu_version: ${{ env.TOFU_VERSION }}
 
-      - run: |
-          tofu init
-          echo $GITHUB_WORKSPACE
-          echo $(pwd)
-          ls -l .
-          tofu apply plan-${{ github.run_id }}
+      - name: Configure Credentials
+        run: |
+          echo "do_token=$DO_TOKEN" >> creds.auto.tfvars
+          echo "cloudflare_dns_admin_token=$CLOUDFLARE_DNS_ADMIN_TOKEN" >> creds.auto.tfvars
+        env:
+          DO_TOKEN: ${{ secrets.DO_TOKEN }}
+          CLOUDFLARE_DNS_ADMIN_TOKEN: ${{ secrets.CLOUDFLARE_DNS_ADMIN_TOKEN }}
+
+      - name: Apply Infrastructure
+        run: |
+          ./bootstrap.sh -a
 
   destroy:
     if: github.event.inputs.action == 'destroy'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4.3.1
-        with:
-          audience: sts.amazonaws.com
-          aws-region: ${{ vars.AWS_REGION }}
-          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
-        
       - uses: opentofu/setup-opentofu@v1
         with:
-          tofu_version: 1.10.5
+          tofu_version: ${{ env.TOFU_VERSION }}
 
       - run: |
-          tofu init
           tofu destroy -auto-approve
   
   notify:
