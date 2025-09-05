@@ -1,20 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: guestbook-ui
   namespace: nori-butler
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: nginx
+      app: guestbook-ui
   template:
     metadata:
       labels:
-        app: nginx
+        app: guestbook-ui
     spec:
       containers:
-        - image: nginx
-          name: nginx
+        - image: gcr.io/google-samples/gb-frontend:v5
+          name: guestbook-ui
           ports:
             - containerPort: 80
