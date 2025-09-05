@@ -1,0 +1,18 @@
+global:
+  domain: argocd.norriswu.me
+
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    extraTls:
+      - hosts:
+        - argocd.norriswu.me
+        secretName: wildcard-tls
