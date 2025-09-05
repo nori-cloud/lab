@@ -10,7 +10,7 @@ configs:
       connectors:
       - config:
           issuer: https://authentik.norriswu.me/application/o/argocd/
-          clientID: sRdFm4LnObDm8dSNClFm9RvBFp0YKN1P6pYmvtjd
+          clientID: NgHa6zQP8BCiGxIgfgX0JUWtZEYdaqsEB4qlsUSI
           clientSecret: $dex.authentik.clientSecret
           insecureEnableGroups: true
           scopes:
@@ -20,10 +20,10 @@ configs:
         name: authentik
         type: oidc
         id: authentik
-    rbac:
-      policy.csv: |
-        g, ArgoCD Admins, role:admin
-        g, ArgoCD Viewers, role:readonly
+  rbac:
+    policy.csv: |
+      g, ArgoCD Admins, role:admin
+      g, ArgoCD Viewers, role:readonly
 
 server:
   ingress:
