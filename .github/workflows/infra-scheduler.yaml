@@ -31,8 +31,9 @@ jobs:
 
       - name: Configure Credentials
         run: |
-          echo "do_token=$DO_TOKEN" >> creds.auto.tfvars
-          echo "cloudflare_dns_admin_token=$CLOUDFLARE_DNS_ADMIN_TOKEN" >> creds.auto.tfvars
+          echo "do_token=\"$DO_TOKEN\"" >> creds.auto.tfvars
+          echo "cloudflare_dns_admin_token=\"$CLOUDFLARE_DNS_ADMIN_TOKEN\"" >> creds.auto.tfvars
+          echo "" >> creds.auto.tfvars
         env:
           DO_TOKEN: ${{ secrets.DO_TOKEN }}
           CLOUDFLARE_DNS_ADMIN_TOKEN: ${{ secrets.CLOUDFLARE_DNS_ADMIN_TOKEN }}
@@ -53,8 +54,9 @@ jobs:
 
       - name: Configure Credentials
         run: |
-          echo "do_token=$DO_TOKEN" >> creds.auto.tfvars
-          echo "cloudflare_dns_admin_token=$CLOUDFLARE_DNS_ADMIN_TOKEN" >> creds.auto.tfvars
+          echo "do_token=\"$DO_TOKEN\"" >> creds.auto.tfvars
+          echo "cloudflare_dns_admin_token=\"$CLOUDFLARE_DNS_ADMIN_TOKEN\"" >> creds.auto.tfvars
+          echo "" >> creds.auto.tfvars
         env:
           DO_TOKEN: ${{ secrets.DO_TOKEN }}
           CLOUDFLARE_DNS_ADMIN_TOKEN: ${{ secrets.CLOUDFLARE_DNS_ADMIN_TOKEN }}
