@@ -5,6 +5,7 @@ provider "registry.opentofu.org/digitalocean/digitalocean" {
   version     = "2.66.0"
   constraints = "2.66.0"
   hashes = [
+    "h1:3FGCHCcsYlqZzA68Nvt3l7bx7uQS4Xuel/9dcsMnuZQ=",
     "h1:T6po3hpT1THqTsWzpcqvVXEp+EdbE8/gwfGBIJnsKhs=",
     "zh:004faa95468130dae03989b968829b3cce8f20ca8f9ce108fa87803a814067f7",
     "zh:02d006f6bfff57dcafa90d00fc973f3078f992699d6dfe1d9ed0fd13f3c0af8d",
@@ -30,6 +31,7 @@ provider "registry.opentofu.org/hashicorp/helm" {
   constraints = "3.0.2"
   hashes = [
     "h1:17Ro1Gs9aCN5QGQ6RDvuianmNV3AxgegYqTJODlYdHI=",
+    "h1:ypaojUVrtK/ha5zAfhnxpbNMg1oqvRV5ogoPx5VEoN8=",
     "zh:100f75a700074568cfaee7884e4477c50b5468e086db5bb95d7d519581b65621",
     "zh:578d09c7319d0dd0fee03a7fcb48bf68ac978c1fefaa0752cfcb9ecfb0a56a4e",
     "zh:64e7cce303362b4bf132d1c61858ef0ada221af4a2ea0fdfd16ec43e562d459c",
@@ -47,6 +49,7 @@ provider "registry.opentofu.org/hashicorp/kubernetes" {
   version     = "2.38.0"
   constraints = "2.38.0"
   hashes = [
+    "h1:eCV78xGlh9eay+62U4gAgCEMohuiBJXN9XTIZNn+rX4=",
     "h1:nY7J9jFXcsRINog0KYagiWZw1GVYF9D2JmtIB7Wnrao=",
     "zh:1096b41c4e5b2ee6c1980916fb9a8579bc1892071396f7a9432be058aabf3cbc",
     "zh:2959fde9ae3d1deb5e317df0d7b02ea4977951ee6b9c4beb083c148ca8f3681c",
