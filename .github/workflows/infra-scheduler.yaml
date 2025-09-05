@@ -39,7 +39,10 @@ jobs:
       - uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: ${{ env.TOFU_VERSION }}
-        
+
+      - name: OpenTofu Init
+        run: tofu init
+
       - name: Configure Credentials
         run: |
           echo "do_token=\"$DO_TOKEN\"" >> creds.auto.tfvars
@@ -74,6 +77,9 @@ jobs:
         with:
           tofu_version: ${{ env.TOFU_VERSION }}
 
+      - name: OpenTofu Init
+        run: tofu init
+
       - name: Configure Credentials
         run: |
           echo "do_token=\"$DO_TOKEN\"" >> creds.auto.tfvars
@@ -106,6 +112,9 @@ jobs:
       - uses: opentofu/setup-opentofu@v1
         with:
           tofu_version: ${{ env.TOFU_VERSION }}
+
+      - name: OpenTofu Init
+        run: tofu init
 
       - run: |
           tofu destroy -auto-approve
