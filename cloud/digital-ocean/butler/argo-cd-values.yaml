@@ -4,6 +4,25 @@ global:
 configs:
   params:
     server.insecure: true
+  cm:
+    dex.config: |
+      connectors:
+      - config:
+          issuer: https://authentik.norriswu.me/application/o/argocd/
+          clientID: sRdFm4LnObDm8dSNClFm9RvBFp0YKN1P6pYmvtjd
+          clientSecret: $dex.authentik.clientSecret
+          insecureEnableGroups: true
+          scopes:
+            - openid
+            - profile
+            - email
+        name: authentik
+        type: oidc
+        id: authentik
+    rbac:
+      policy.csv: |
+        g, ArgoCD Admins, role:admin
+        g, ArgoCD Viewers, role:readonly
 
 server:
   ingress:
