@@ -1,0 +1,16 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: guestbook-ui
+  namespace: nori-butler
+  labels:
+    app: guestbook-ui
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`guestbook.norriswu.me`)
+      kind: Rule
+      services:
+        - name: guestbook-ui
+          port: 80

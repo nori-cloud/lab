@@ -21,7 +21,11 @@ resource "digitalocean_kubernetes_cluster" "dkc" {
     node_count = 1
   }
 
-  destroy_all_associated_resources = true
+  provisioner "local-exec" {
+    when = create
+
+    command = "doctl kubernetes cluster kubeconfig save ${digitalocean_kubernetes_cluster.dkc.id} --access-token ${digitalocean_kubernetes_cluster.dkc.kube_config[0].token}"
+  }
 }
 
 output "id" {
