@@ -22,6 +22,8 @@ defaults:
 jobs:
   bootstrap:
     runs-on: ubuntu-latest
+    outputs:
+      summary-encoded: ${{ steps.bootstrap.outputs.summary-encoded }}
     permissions:
       contents: read
       id-token: write
@@ -49,11 +51,12 @@ jobs:
           echo $TF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
 
       - name: Bootstrap Infrastructure
+        id: bootstrap
         run: |
-          ./bootstrap.sh --action ${{ github.event.inputs.action }} > bootstrap_output.txt
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          cat bootstrap_output.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          ./bootstrap.sh --action ${{ github.event.inputs.action }} > summary.txt
+          cat summary.txt
+          SUMMARY_ENCODED=$(cat summary.txt | base64 -w 0)
+          echo "summary-encoded=$SUMMARY_ENCODED" >> $GITHUB_OUTPUT
 
   notify:
     if: ${{ always() }}
@@ -66,5 +69,7 @@ jobs:
       - run: |
           MSG="finish with status of ${{ needs.bootstrap.result }}."
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"${{ needs.bootstrap.outputs.output }}\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
+          SUMMARY=$(echo $SUMMARY_ENCODED | base64 --decode)
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$SUMMARY\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
