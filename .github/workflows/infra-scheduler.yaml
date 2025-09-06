@@ -58,6 +58,7 @@ jobs:
         if: always()
         run: |
           cat summary.txt
+          cat summary.txt >> $GITHUB_STEP_SUMMARY
           SUMMARY_ENCODED=$(cat summary.txt | base64 -w 0)
           echo "summary-encoded=$SUMMARY_ENCODED" >> $GITHUB_OUTPUT
 
