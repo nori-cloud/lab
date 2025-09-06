@@ -47,7 +47,7 @@ jobs:
         env:
           TF_CREDS_BASE64: ${{ secrets.TF_CREDS_BASE64 }}
         run: |
-          echo $CERTIFICATF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
+          echo $TF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
 
       - name: Plan Infrastructure
         run: |
@@ -80,7 +80,7 @@ jobs:
         env:
           TF_CREDS_BASE64: ${{ secrets.TF_CREDS_BASE64 }}
         run: |
-          echo $CERTIFICATF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
+          echo $TF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
 
       - name: Apply Infrastructure
         run: |
@@ -113,7 +113,7 @@ jobs:
         env:
           TF_CREDS_BASE64: ${{ secrets.TF_CREDS_BASE64 }}
         run: |
-          echo $CERTIFICATF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
+          echo $TF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
 
       - run: |
           ./bootstrap.sh --action destroy
