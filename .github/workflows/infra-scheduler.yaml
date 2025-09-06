@@ -70,12 +70,15 @@ jobs:
       run:
         working-directory: .
     steps:
-      - name: Send Summary to Discord
+      - name: Decode Summary
         run: |
           # Decode and prepare summary content
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
           echo "$SUMMARY_ENCODED" | base64 --decode > summary_raw.txt
-          
+          cat summary_raw.txt
+
+      - name: Format Summary Text
+        run: |
           # Convert ANSI colors to colored emojis for better readability
           cat summary_raw.txt | \
             sed 's/\x1b\[32m+/🟢 +/g' | \
@@ -97,7 +100,10 @@ jobs:
             # Clean up any remaining ANSI escape sequences
             sed 's/\x1b\[[0-9;]*m//g' | \
             sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > summary.txt
+          cat summary.txt
           
+      - name: Send Summary to Discord
+        run: |
           # Create a simple status message
           STATUS_EMOJI="${{ needs.bootstrap.result == 'success' && '✅' || '❌' }}"
           STATUS_COLOR="${{ needs.bootstrap.result == 'success' && '🟢' || '🔴' }}"
