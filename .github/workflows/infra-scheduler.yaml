@@ -72,7 +72,6 @@ jobs:
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
           SUMMARY=$(echo $SUMMARY_ENCODED | base64 --decode)
-          cat $SUMMARY_ENCODED
           cat $SUMMARY
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$SUMMARY\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
