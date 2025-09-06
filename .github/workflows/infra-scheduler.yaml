@@ -71,7 +71,8 @@ jobs:
           MSG="finish with status of ${{ needs.bootstrap.result }}."
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
-          SUMMARY=$(echo $SUMMARY_ENCODED | base64 --decode)
-          cat $SUMMARY
+          SUMMARY=$(echo "$SUMMARY_ENCODED" | base64 --decode)
+          echo "Encoded Summary: $SUMMARY_ENCODED"
+          echo "Decoded Summary: $SUMMARY"
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$SUMMARY\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
