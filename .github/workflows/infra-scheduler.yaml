@@ -52,15 +52,15 @@ jobs:
 
       - name: Bootstrap Infrastructure
         run: |
-          ./bootstrap.sh --action ${{ github.event.inputs.action }} > summary.txt
+          ./bootstrap.sh --action ${{ github.event.inputs.action }} > summary.md
       
       - name: Write Summary to File
         id: write-summary
         if: always()
         run: |
-          cat summary.txt
-          cat summary.txt >> $GITHUB_STEP_SUMMARY
-          SUMMARY_ENCODED=$(cat summary.txt | base64 -w 0)
+          cat summary.md
+          cat summary.md >> $GITHUB_STEP_SUMMARY
+          SUMMARY_ENCODED=$(cat summary.md | base64 -w 0)
           echo "summary-encoded=$SUMMARY_ENCODED" >> $GITHUB_OUTPUT
 
   notify:
@@ -75,13 +75,13 @@ jobs:
         run: |
           # Decode and prepare summary content
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
-          echo "$SUMMARY_ENCODED" | base64 --decode > summary_raw.txt
-          cat summary_raw.txt
+          echo "$SUMMARY_ENCODED" | base64 --decode > summary_raw.md
+          cat summary_raw.md
 
       - name: Format Summary Text
         run: |
           # Convert ANSI colors to colored emojis for better readability
-          cat summary_raw.txt | \
+          cat summary_raw.md | \
             sed 's/\x1b\[32m+/🟢 +/g' | \
             sed 's/\x1b\[31m-/🔴 -/g' | \
             sed 's/\x1b\[33m~/🟡 ~/g' | \
@@ -100,8 +100,8 @@ jobs:
             sed 's/──────────────────────────────────────────────────────────────────────────────/─────────────────────────────────────────────────────────────────────────────/g' | \
             # Clean up any remaining ANSI escape sequences
             sed 's/\x1b\[[0-9;]*m//g' | \
-            sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > summary.txt
-          cat summary.txt
+            sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > summary.md
+          cat summary.md
           
       - name: Send Summary to Discord
         run: |
@@ -112,6 +112,6 @@ jobs:
           # Send message with emoji-colored file attachment
           curl -X POST \
             -F "content=[Nori-Cloud: Infra Workflow] $STATUS_EMOJI Finished with status: **${{ needs.bootstrap.result }}** $STATUS_COLOR 🐱" \
-            -F "file=@summary.txt;filename=infra-summary.txt;type=text/plain" \
+            -F "file=@summary.md;filename=infra-summary.md;type=text/plain" \
             ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
