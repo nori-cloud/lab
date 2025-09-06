@@ -55,6 +55,7 @@ jobs:
           ./bootstrap.sh --action ${{ github.event.inputs.action }} > summary.txt
       
       - name: Write Summary to File
+        id: write-summary
         if: always()
         run: |
           cat summary.txt
