@@ -23,7 +23,7 @@ jobs:
   bootstrap:
     runs-on: ubuntu-latest
     outputs:
-      summary-encoded: ${{ steps.bootstrap.outputs.summary-encoded }}
+      summary-encoded: ${{ steps.write-summary.outputs.summary-encoded }}
     permissions:
       contents: read
       id-token: write
@@ -51,9 +51,12 @@ jobs:
           echo $TF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
 
       - name: Bootstrap Infrastructure
-        id: bootstrap
         run: |
           ./bootstrap.sh --action ${{ github.event.inputs.action }} > summary.txt
+      
+      - name: Write Summary to File
+        if: always()
+        run: |
           cat summary.txt
           SUMMARY_ENCODED=$(cat summary.txt | base64 -w 0)
           echo "summary-encoded=$SUMMARY_ENCODED" >> $GITHUB_OUTPUT
