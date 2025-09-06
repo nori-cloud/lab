@@ -72,17 +72,13 @@ jobs:
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
           echo "$SUMMARY_ENCODED" | base64 --decode > summary.txt
           
-          # Read summary content and escape for JSON
-          SUMMARY_CONTENT=$(cat summary.txt | sed 's/"/\\"/g' | sed 's/$/\\n/' | tr -d '\n')
+          # Create a simple status message
+          STATUS_EMOJI="${{ needs.bootstrap.result == 'success' && '✅' || '❌' }}"
+          STATUS_COLOR="${{ needs.bootstrap.result == 'success' && '🟢' || '🔴' }}"
           
-          # Create Discord embed with proper formatting
-          curl -X POST -H "Content-Type: application/json" -d "{
-            \"content\": \"[Nori-Cloud: Infra Workflow] Finished with status: **${{ needs.bootstrap.result }}** 🐱\",
-            \"embeds\": [{
-              \"title\": \"Infrastructure Summary\",
-              \"description\": \"\`\`\`\n$SUMMARY_CONTENT\n\`\`\`\",
-              \"color\": ${{ needs.bootstrap.result == 'success' && '65280' || '16711680' }},
-              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)\"
-            }]
-          }" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          # Send message with file attachment
+          curl -X POST \
+            -F "content=[Nori-Cloud: Infra Workflow] $STATUS_EMOJI Finished with status: **${{ needs.bootstrap.result }}** $STATUS_COLOR 🐱" \
+            -F "file=@summary.txt;filename=infra-summary.txt;type=text/plain" \
+            ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
