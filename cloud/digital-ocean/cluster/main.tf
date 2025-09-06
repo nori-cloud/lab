@@ -20,12 +20,6 @@ resource "digitalocean_kubernetes_cluster" "dkc" {
     size       = "s-2vcpu-4gb"
     node_count = 1
   }
-
-  provisioner "local-exec" {
-    when = create
-
-    command = "CI=false && doctl kubernetes cluster kubeconfig save ${self.id} --access-token ${self.kube_config[0].token}"
-  }
 }
 
 output "id" {
