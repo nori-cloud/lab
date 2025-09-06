@@ -140,5 +140,5 @@ jobs:
               ;;
           esac
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $GITHUB_STEP_SUMMARY \"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$(cat $GITHUB_STEP_SUMMARY)\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
