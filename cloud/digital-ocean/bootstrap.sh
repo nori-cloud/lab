@@ -45,7 +45,7 @@ function apply() {
   local target=$1
   local plan_file=$PLAN_OUTPUT_DIR/$target.tfplan
 
-  tofu plan -target=$target -out=$plan_file > /dev/null
+  tofu plan -target=$target -out=$plan_file -compact-warnings > /dev/null
 
   if [ "$(tofu show $plan_file | grep -c "No changes.")" -gt 0 ]; then
     echo "✅ No changes needed for target: $target"
@@ -79,7 +79,7 @@ case $ACTION in
     apply $TARGET_BUTLER
     ;;
   "plan")
-    tofu plan -target=$TARGET_CLUSTER
+    tofu plan -target=$TARGET_CLUSTER -compact-warnings
     ;;
   "destroy")
     destroy

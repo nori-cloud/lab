@@ -70,15 +70,39 @@ jobs:
         run: |
           # Decode and prepare summary content
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
-          echo "$SUMMARY_ENCODED" | base64 --decode > summary.txt
+          echo "$SUMMARY_ENCODED" | base64 --decode > summary_raw.txt
+          
+          # Convert ANSI colors to Discord markdown formatting
+          cat summary_raw.txt | \
+            sed 's/\x1b\[32m/```diff\n/g' | \
+            sed 's/\x1b\[31m/```diff\n/g' | \
+            sed 's/\x1b\[33m/```fix\n/g' | \
+            sed 's/\x1b\[90m/```\n/g' | \
+            sed 's/\x1b\[1m/**/g' | \
+            sed 's/\x1b\[0m/```\n/g' | \
+            sed 's/\[32m+/```diff\n+ /g' | \
+            sed 's/\[31m-/```diff\n- /g' | \
+            sed 's/\[33m~/```fix\n~ /g' | \
+            sed 's/\[0m/```\n/g' | \
+            sed 's/\[1m/**/g' | \
+            sed 's/\[90m/```\n/g' | \
+            sed 's/\[33m/```fix\n/g' | \
+            sed 's/\[0m/```\n/g' | \
+            sed 's/╷/┌/g' | \
+            sed 's/╵/└/g' | \
+            sed 's/│/│/g' | \
+            sed 's/──────────────────────────────────────────────────────────────────────────────/─────────────────────────────────────────────────────────────────────────────/g' | \
+            # Clean up any remaining ANSI escape sequences
+            sed 's/\x1b\[[0-9;]*m//g' | \
+            sed 's/\x1b\[[0-9;]*[a-zA-Z]//g' > summary.txt
           
           # Create a simple status message
           STATUS_EMOJI="${{ needs.bootstrap.result == 'success' && '✅' || '❌' }}"
           STATUS_COLOR="${{ needs.bootstrap.result == 'success' && '🟢' || '🔴' }}"
           
-          # Send message with file attachment
+          # Send message with colored file attachment
           curl -X POST \
             -F "content=[Nori-Cloud: Infra Workflow] $STATUS_EMOJI Finished with status: **${{ needs.bootstrap.result }}** $STATUS_COLOR 🐱" \
-            -F "file=@summary.txt;filename=infra-summary.txt;type=text/plain" \
+            -F "file=@summary.txt;filename=infra-summary.md;type=text/markdown" \
             ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
