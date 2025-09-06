@@ -50,7 +50,10 @@ jobs:
 
       - name: Bootstrap Infrastructure
         run: |
-          ./bootstrap.sh --action ${{ github.event.inputs.action }} >> $GITHUB_STEP_SUMMARY
+          ./bootstrap.sh --action ${{ github.event.inputs.action }} > bootstrap_output.txt
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          cat bootstrap_output.txt >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
   notify:
     if: ${{ always() }}
@@ -61,8 +64,7 @@ jobs:
         working-directory: .
     steps:
       - run: |
-          MSG="finish planning with status of ${{ needs.bootstrap.result }}."
-          
+          MSG="finish with status of ${{ needs.bootstrap.result }}."
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$(cat $GITHUB_STEP_SUMMARY)\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"${{ needs.bootstrap.outputs.output }}\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
