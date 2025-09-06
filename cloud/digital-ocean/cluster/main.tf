@@ -24,7 +24,7 @@ resource "digitalocean_kubernetes_cluster" "dkc" {
   provisioner "local-exec" {
     when = create
 
-    command = "doctl kubernetes cluster kubeconfig save ${self.id} --access-token ${self.kube_config[0].token}"
+    command = "CI=false && doctl kubernetes cluster kubeconfig save ${self.id} --access-token ${self.kube_config[0].token}"
   }
 }
 
