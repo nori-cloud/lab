@@ -68,11 +68,21 @@ jobs:
     steps:
       - name: Send Summary to Discord
         run: |
-          MSG="finish with status of ${{ needs.bootstrap.result }}."
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          # Decode and prepare summary content
           SUMMARY_ENCODED="${{ needs.bootstrap.outputs.summary-encoded }}"
-          SUMMARY=$(echo "$SUMMARY_ENCODED" | base64 --decode)
-          echo "Encoded Summary: $SUMMARY_ENCODED"
-          echo "Decoded Summary: $SUMMARY"
-          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"$SUMMARY\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          echo "$SUMMARY_ENCODED" | base64 --decode > summary.txt
+          
+          # Read summary content and escape for JSON
+          SUMMARY_CONTENT=$(cat summary.txt | sed 's/"/\\"/g' | sed 's/$/\\n/' | tr -d '\n')
+          
+          # Create Discord embed with proper formatting
+          curl -X POST -H "Content-Type: application/json" -d "{
+            \"content\": \"[Nori-Cloud: Infra Workflow] Finished with status: **${{ needs.bootstrap.result }}** 🐱\",
+            \"embeds\": [{
+              \"title\": \"Infrastructure Summary\",
+              \"description\": \"\`\`\`\n$SUMMARY_CONTENT\n\`\`\`\",
+              \"color\": ${{ needs.bootstrap.result == 'success' && '65280' || '16711680' }},
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)\"
+            }]
+          }" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
