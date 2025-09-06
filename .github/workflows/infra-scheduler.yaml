@@ -51,7 +51,7 @@ jobs:
 
       - name: Plan Infrastructure
         run: |
-          ./bootstrap.sh --action plan
+          ./bootstrap.sh --action plan >> $GITHUB_STEP_SUMMARY
 
   apply:
     if: github.event.inputs.action == 'apply'
@@ -84,7 +84,7 @@ jobs:
 
       - name: Apply Infrastructure
         run: |
-          ./bootstrap.sh --action apply
+          ./bootstrap.sh --action apply >> $GITHUB_STEP_SUMMARY
 
   destroy:
     if: github.event.inputs.action == 'destroy'
@@ -116,7 +116,7 @@ jobs:
           echo $TF_CREDS_BASE64 | base64 --decode > creds.auto.tfvars
 
       - run: |
-          ./bootstrap.sh --action destroy
+          ./bootstrap.sh --action destroy >> $GITHUB_STEP_SUMMARY
   
   notify:
     if: ${{ always() }}
@@ -140,4 +140,5 @@ jobs:
               ;;
           esac
           curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $MSG meow 🐱\"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d "{\"content\": \"[Nori-Cloud: Infra Workflow] $GITHUB_STEP_SUMMARY \"}" ${{ vars.DISCORD_MESSAGE_WEBHOOK }}
   
