@@ -51,7 +51,7 @@ function apply() {
     echo "✅ No changes needed for target: $target"
   else
     echo "🔨 Executing \"tofu apply $plan_file\""
-    tofu apply $plan_file
+    tofu apply $plan_file -concise -compact-warnings
     echo "✅ Applied target: $target"
   fi
 }
@@ -65,7 +65,7 @@ function destroy() {
     echo "❓ Nothing to destroy"
   else
     echo "🔨 Executing \"tofu apply $plan_file\""
-    tofu apply $plan_file
+    tofu apply $plan_file -concise -compact-warnings
     echo "✅ Destroyed infra"
   fi
 }
