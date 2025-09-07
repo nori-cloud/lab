@@ -33,7 +33,7 @@ variable "cloudflare_dns_admin_token" {
 
 module "cluster" {
   source = "./cluster"
-  name   = "${local.name}-cluster"
+  name   = "${local.name}-cluster-${formatdate("YYYYMMDD", timestamp())}"
 }
 
 output "cluster_id" {
