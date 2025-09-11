@@ -12,7 +12,8 @@
 		"vscode": {
 			"extensions": [
 				"sleistner.vscode-fileutils",
-				"opentofu.vscode-opentofu"
+				"opentofu.vscode-opentofu",
+				"esbenp.prettier-vscode"
 			]
 		}
 	},
