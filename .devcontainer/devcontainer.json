@@ -1,8 +1,8 @@
 {
-	"name": "Nori-cloud Infra",
+	"name": "Nori-cloud Lab",
 	"dockerComposeFile": "devcontainer.docker-compose.yaml",
 	"service": "workspace",
-	"workspaceFolder": "/workspace/infra",
+	"workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/devcontainers/features/aws-cli:1": {},
