@@ -32,11 +32,11 @@ The minimum specification to run all OPNsense standard features that do not need
 
 [back to top](#system-requirements)
 
-|         |                            |
-| ------- | -------------------------- |
-| CPU     | 2 cores                    |
-| RAM     | 8GB - 8 drives, +1GB/drive |
-| Storage | 16GB for OS                |
+|         | Minimum                                     |
+| ------- | ------------------------------------------- |
+| CPU     | 2-Core Intel 64-Bit or AMD x86_64 processor |
+| RAM     | 8GB - 8 drives, +1GB/drive                  |
+| Storage | 16GB for OS                                 |
 
 About Memory Sizing: https://www.truenas.com/docs/scale/gettingstarted/scalehardwareguide/#memory-sizing
 
