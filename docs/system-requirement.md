@@ -28,6 +28,10 @@ The minimum specification to run all OPNsense standard features that do not need
 | Feature Set           | reduced                                                                                                                                                                                                                                                                   | all                                                                                                                                                       | all                                                                                                                             |
 | Description           | The minimum specification to run all OPNsense standard features that do not need disk writes, means you can run all standard features, except for the ones that require disk writes, e.g. a caching proxy (cache) or intrusion detection and prevention (alert database). | The reasonable specification to run all OPNsense standard features, means every feature is functional, but perhaps not with a lot of users or high loads. | The recommended specification to run all OPNsense standard features, means every feature is functional and fits most use cases. |
 
+### [Embedded vs Full Image](https://docs.opnsense.org/manual/install.html#embedded-vs-full)
+
+Both image types can be installed and run from virtual disks (VM), SD memory cards, USB disks, solid-state disks (SSD), or hard disk drives (HDD).
+
 ## [TrueNAS](https://www.truenas.com/docs/scale/gettingstarted/scalehardwareguide/)
 
 [back to top](#system-requirements)
