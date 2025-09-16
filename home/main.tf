@@ -1,10 +1,10 @@
 terraform {
   required_providers {
     # https://registry.terraform.io/providers/bpg/proxmox/latest/docs
-    proxmox = {
-      source  = "bpg/proxmox"
-      version = "0.83.2"
-    }
+    # proxmox = {
+    #   source  = "bpg/proxmox"
+    #   version = "0.83.2"
+    # }
     # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
     kubernetes = {
       source  = "hashicorp/kubernetes"
@@ -34,15 +34,19 @@ variable "proxmox_api_token" {
   sensitive = true
 }
 
-provider "proxmox" {
-  endpoint  = "https://192.168.0.100:8006/"
-  api_token = var.proxmox_api_token
-  insecure  = true
-  ssh {
-    agent    = true
-    username = var.proxmox_username
-  }
-}
+# provider "proxmox" {
+#   endpoint  = "https://192.168.0.100:8006/"
+#   api_token = var.proxmox_api_token
+#   insecure  = true
+#   ssh {
+#     agent    = true
+#     username = var.proxmox_username
+#   }
+# }
+
+# module "proxmox" {
+#   source = "./proxmox"
+# }
 
 provider "kubernetes" {
   config_path = "~/.kube/config"
@@ -56,10 +60,6 @@ provider "helm" {
 
 locals {
   name = "nori-cloud"
-}
-
-module "proxmox" {
-  source = "./proxmox"
 }
 
 module "cluster" {
