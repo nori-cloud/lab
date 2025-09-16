@@ -87,24 +87,24 @@ variable "tailscale_oauth_client_id" {
 }
 
 variable "tailscale_oauth_client_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 resource "helm_release" "tailscale_operator" {
-  namespace = kubernetes_namespace.this.metadata[0].name
-  name = "tailscale-operator"
-  repository  = "https://pkgs.tailscale.com/helmcharts"
-  chart = "tailscale-operator"
-  version = "1.86.5"
+  namespace  = kubernetes_namespace.this.metadata[0].name
+  name       = "tailscale-operator"
+  repository = "https://pkgs.tailscale.com/helmcharts"
+  chart      = "tailscale-operator"
+  version    = "1.86.5"
 
   set = [
     {
-      name = "oauth.clientId"
+      name  = "oauth.clientId"
       value = var.tailscale_oauth_client_id
     },
     {
-      name = "oauth.clientSecret"
+      name  = "oauth.clientSecret"
       value = var.tailscale_oauth_client_secret
     }
   ]

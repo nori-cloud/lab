@@ -1,19 +1,22 @@
 terraform {
   required_providers {
+    # https://registry.terraform.io/providers/bpg/proxmox/latest/docs
     proxmox = {
-      source = "bpg/proxmox"
+      source  = "bpg/proxmox"
       version = "0.83.2"
     }
+    # https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "2.38.0"
     }
+    # https://registry.terraform.io/providers/hashicorp/helm/latest/docs
     helm = {
       source  = "hashicorp/helm"
       version = "3.0.2"
     }
   }
-  
+
   backend "s3" {
     bucket       = "infra-tf-033b4055b800d083"
     key          = "infra-home/terraform.tfstate"
@@ -27,12 +30,12 @@ variable "proxmox_username" {
 }
 
 variable "proxmox_api_token" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 provider "proxmox" {
-  endpoint = "https://192.168.0.100:8006/"
+  endpoint  = "https://192.168.0.100:8006/"
   api_token = var.proxmox_api_token
   insecure  = true
   ssh {
@@ -72,7 +75,7 @@ variable "tailscale_oauth_client_id" {
 }
 
 variable "tailscale_oauth_client_secret" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -80,14 +83,14 @@ module "networking" {
   depends_on = [module.cluster]
   source     = "./networking"
 
-  namespace = "networking"
-  tailscale_oauth_client_id = var.tailscale_oauth_client_id
+  namespace                     = "networking"
+  tailscale_oauth_client_id     = var.tailscale_oauth_client_id
   tailscale_oauth_client_secret = var.tailscale_oauth_client_secret
 }
 
 module "system" {
   depends_on = [module.networking]
-  source = "./system"
+  source     = "./system"
 
   namespace = "system"
 }
