@@ -1,0 +1,19 @@
+service:
+  annotations:
+    tailscale.com/hostname: home
+  spec:
+    loadBalancerClass: tailscale
+
+ports:
+  web:
+    port: 8000
+  websecure:
+    port: 8443
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true
