@@ -46,8 +46,3 @@ spec:
       services:
         - name: nginx
           port: 80
-    - match: Host(`nginx.home.hoki-sole.ts.net`)
-      kind: Rule
-      services:
-        - name: nginx
-          port: 80

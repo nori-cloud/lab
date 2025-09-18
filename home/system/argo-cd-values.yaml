@@ -35,5 +35,4 @@ server:
     extraTls:
       - hosts:
           - argocd.home.norriswu.me
-          - argocd.home.hoki-sole.ts.net
         secretName: wildcard-tls

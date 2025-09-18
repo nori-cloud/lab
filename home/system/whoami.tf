@@ -67,16 +67,6 @@ resource "kubernetes_manifest" "whoami" {
               port = 80
             }
           ]
-        },
-        {
-          match = "Host(`whoami.home.hoki-sole.ts.net`)"
-          kind  = "Rule"
-          services = [
-            {
-              name = "whoami"
-              port = 80
-            }
-          ]
         }
       ]
     }
