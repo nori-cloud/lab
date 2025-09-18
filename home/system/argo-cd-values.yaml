@@ -1,5 +1,5 @@
 global:
-  domain: argocd.norriswu.me
+  domain: argocd.home.norriswu.me
 
 configs:
   params:
@@ -9,8 +9,8 @@ configs:
     dex.config: |
       connectors:
       - config:
-          issuer: https://authentik.norriswu.me/application/o/argocd/
-          clientID: NgHa6zQP8BCiGxIgfgX0JUWtZEYdaqsEB4qlsUSI
+          issuer: https://authentik.home.norriswu.me/application/o/argocd/
+          clientID: argocd_oauth_client_id
           clientSecret: $dex.authentik.clientSecret
           insecureEnableGroups: true
           scopes:
