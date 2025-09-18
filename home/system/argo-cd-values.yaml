@@ -29,10 +29,6 @@ server:
   ingress:
     enabled: true
     ingressClassName: traefik
-    annotations:
-      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
     extraTls:
       - hosts:
           - argocd.home.norriswu.me
-        secretName: wildcard-tls
