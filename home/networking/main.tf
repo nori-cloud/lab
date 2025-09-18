@@ -19,22 +19,6 @@ resource "kubernetes_namespace" "this" {
   }
 }
 
-# variable "cloudflare_dns_admin_token" {
-#   type      = string
-#   sensitive = true
-# }
-
-# resource "kubernetes_secret" "cloudflare_creds" {
-#   metadata {
-#     name      = "cloudflare-creds"
-#     namespace = kubernetes_namespace.this.metadata[0].name
-#   }
-
-#   data = {
-#     cloudflare_api_token = var.cloudflare_dns_admin_token
-#   }
-# }
-
 # resource "helm_release" "external-dns" {
 #   depends_on = [kubernetes_secret.cloudflare_creds]
 
@@ -108,6 +92,22 @@ resource "helm_release" "tailscale_operator" {
       value = var.tailscale_oauth_client_secret
     }
   ]
+}
+
+variable "cloudflare_dns_admin_token" {
+  type      = string
+  sensitive = true
+}
+
+resource "kubernetes_secret" "cloudflare_creds" {
+  metadata {
+    name      = "cloudflare-creds"
+    namespace = kubernetes_namespace.this.metadata[0].name
+  }
+
+  data = {
+    cloudflare_api_token = var.cloudflare_dns_admin_token
+  }
 }
 
 resource "helm_release" "traefik" {
