@@ -27,6 +27,13 @@ ingressClass:
   enabled: true
   isDefaultClass: true
 
+ingressRoute:
+  dashboard:
+    enabled: true
+    entryPoints:
+      - websecure
+    matchRule: Host(`traefik.home.norriswu.me`)
+
 providers:
   kubernetesCRD:
     allowCrossNamespace: true
