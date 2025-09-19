@@ -10,8 +10,8 @@ configs:
       connectors:
       - config:
           issuer: https://authentik.home.norriswu.me/application/o/argocd/
-          clientID: argocd_oauth_client_id
-          clientSecret: $dex.authentik.clientSecret
+          clientID: $argocd-oauth-client:client_id
+          clientSecret: $argocd-oauth-client:client_secret
           insecureEnableGroups: true
           scopes:
             - openid
