@@ -2,11 +2,15 @@ resource "kubernetes_secret" "argocd-oauth-client" {
   metadata {
     name = "argocd-oauth-client"
     namespace = kubernetes_namespace.this.metadata[0].name
+
+    labels = {
+      "app.kubernetes.io/part-of" = "argocd"
+    }
   }
 
   data = {
-    client_id = ""
-    client_secret = ""
+    client-id = ""
+    client-secret = ""
   }
 }
 

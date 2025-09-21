@@ -17,10 +17,10 @@ fi
 echo "🔎 Checking if secret exists..."
 if kubectl get secret -n "$NAMESPACE" "$SECRET_NAME" > /dev/null 2>&1; then
     echo "🔑 Found existing secret, patching..."
-    kubectl patch secret "$SECRET_NAME" -n "$NAMESPACE" --type merge -p "{\"data\":{\"client_id\":\"$CLIENT_ID\",\"client_secret\":\"$CLIENT_SECRET\"}}"
+    kubectl patch secret "$SECRET_NAME" -n "$NAMESPACE" --type merge -p "{\"data\":{\"client-id\":\"$CLIENT_ID\",\"client-secret\":\"$CLIENT_SECRET\"}}"
     echo "🔑 Secret patched"
 else
     echo "🔑 Creating secret..."
-    kubectl create secret generic "$SECRET_NAME" -n "$NAMESPACE" --from-literal=client_id="$CLIENT_ID" --from-literal=client_secret="$CLIENT_SECRET"
+    kubectl create secret generic "$SECRET_NAME" -n "$NAMESPACE" --from-literal=client-id="$CLIENT_ID" --from-literal=client-secret="$CLIENT_SECRET"
     echo "🔑 Secret created"
 fi

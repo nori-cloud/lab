@@ -1,5 +1,7 @@
 global:
   domain: argocd.home.norriswu.me
+  logging:
+    level: debug
 
 configs:
   params:
@@ -10,8 +12,8 @@ configs:
       connectors:
       - config:
           issuer: https://authentik.home.norriswu.me/application/o/argocd/
-          clientID: $argocd-oauth-client:client_id
-          clientSecret: $argocd-oauth-client:client_secret
+          clientID: $argocd-oauth-client:client-id
+          clientSecret: $argocd-oauth-client:client-secret
           insecureEnableGroups: true
           scopes:
             - openid
