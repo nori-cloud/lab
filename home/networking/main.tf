@@ -110,6 +110,45 @@ resource "kubernetes_secret" "cloudflare_creds" {
   }
 }
 
+resource "helm_release" "cert_manager" {
+  depends_on = [kubernetes_secret.cloudflare_creds]
+
+  namespace = kubernetes_namespace.this.metadata[0].name
+
+  name       = "cert-manager"
+  repository = "https://charts.jetstack.io"
+  chart      = "cert-manager"
+  version    = "1.18.2"
+
+  values = [file("${path.module}/certmanager-values.yaml")]
+}
+
+resource "helm_release" "cert_manager_config" {
+  depends_on = [helm_release.cert_manager]
+
+  namespace = kubernetes_namespace.this.metadata[0].name
+  name      = "cert-manager-config"
+  chart     = "${path.module}/charts/cert-manager"
+
+  set = [
+    {
+      name  = "namespace"
+      value = kubernetes_namespace.this.metadata[0].name
+    },
+    {
+      name  = "email"
+      value = "norris.wu.au@outlook.com"
+    }
+  ]
+
+  set_list = [
+    {
+      name  = "dnsZone"
+      value = ["norriswu.me"]
+    }
+  ]
+}
+
 resource "helm_release" "traefik" {
   depends_on = [helm_release.tailscale_operator]
 

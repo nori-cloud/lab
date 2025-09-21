@@ -1,0 +1,63 @@
+# prettier-ignore
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-ingressroute-certificate-staging
+  namespace: {{ .Values.namespace }}
+spec:
+  secretName: cluster-certificate-secret-staging
+  issuerRef:
+    name: cloudflare-cluster-issuer-staging
+    kind: ClusterIssuer
+  commonName: "*.home.norriswu.me"
+  dnsNames:
+    - "home.norriswu.me"
+    - "*.home.norriswu.me"
+---
+# prettier-ignore
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-ingressroute-certificate-staging
+  namespace: system
+spec:
+  secretName: cluster-certificate-secret-staging
+  issuerRef:
+    name: cloudflare-cluster-issuer-staging
+    kind: ClusterIssuer
+  commonName: "*.home.norriswu.me"
+  dnsNames:
+    - "home.norriswu.me"
+    - "*.home.norriswu.me"
+---
+# prettier-ignore
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-ingressroute-certificate
+  namespace: {{ .Values.namespace }}
+spec:
+  secretName: cluster-certificate-secret
+  issuerRef:
+    name: cloudflare-cluster-issuer-production
+    kind: ClusterIssuer
+  commonName: "*.home.norriswu.me"
+  dnsNames:
+    - "home.norriswu.me"
+    - "*.home.norriswu.me"
+---
+# prettier-ignore
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cluster-ingressroute-certificate
+  namespace: system
+spec:
+  secretName: cluster-certificate-secret
+  issuerRef:
+    name: cloudflare-cluster-issuer-production
+    kind: ClusterIssuer
+  commonName: "*.home.norriswu.me"
+  dnsNames:
+    - "home.norriswu.me"
+    - "*.home.norriswu.me"
