@@ -21,3 +21,9 @@ RUN apt-get install curl gpg apt-transport-https --yes &&\
 RUN wget https://github.com/digitalocean/doctl/releases/download/v1.139.0/doctl-1.139.0-linux-amd64.tar.gz &&\
   tar xf doctl-1.139.0-linux-amd64.tar.gz &&\
   mv doctl /usr/local/bin
+
+RUN curl -O https://cdn.teleport.dev/teleport-v18.2.2-linux-amd64-bin.tar.gz &&\
+  tar -xzf teleport-v18.2.2-linux-amd64-bin.tar.gz &&\
+  cd teleport &&\
+  sudo ./install &&\
+  rm -rf teleport-v18.2.2-linux-amd64-bin.tar.gz teleport-v18.2.2-linux-amd64-bin

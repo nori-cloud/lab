@@ -1,0 +1,15 @@
+clusterName: teleport.norriswu.me
+proxyListenerMode: multiplex
+
+service:
+  spec:
+    loadBalancerClass: tailscale
+annotations:
+  service:
+    tailscale.com/hostname: teleport
+
+tls:
+  existingSecretName: "teleport-certificate-secret"
+
+authentication:
+  type: github
