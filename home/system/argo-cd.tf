@@ -20,7 +20,15 @@ resource "helm_release" "argo-cd" {
   name       = "argo-cd"
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argo-cd"
-  version    = "8.3.4"
+  version    = "8.5.7"
 
   values = [file("${path.module}/argo-cd-values.yaml")]
+}
+
+resource "helm_release" "argo-cd-config" {
+  depends_on = [helm_release.argo-cd]
+
+  namespace = kubernetes_namespace.this.metadata[0].name
+  name       = "argo-cd-config"
+  chart      = "${path.module}/charts/argo-cd-config"
 }

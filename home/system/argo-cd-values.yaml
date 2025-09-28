@@ -1,7 +1,5 @@
 global:
   domain: argocd.home.norriswu.me
-  logging:
-    level: debug
 
 configs:
   params:

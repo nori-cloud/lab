@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nori-cloud
+---
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/project-specification/
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nori-cloud
+  namespace: system
+spec:
+  destination: "nori-cloud project"
+  sourceRepos:
+    - https://github.com/nori-cloud/lab.git
+  destinations:
+    - namespace: nori-cloud
+      server: https://kubernetes.default.svc
+      name: in-cluster
+---
+# https://argo-cd.readthedocs.io/en/stable/user-guide/application-specification/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nori-cloud
+  namespace: system
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+    # Alternatively, you can use background cascading deletion
+    # - resources-finalizer.argocd.argoproj.io/background
+spec:
+  project: nori-cloud
+
+  source:
+    repoURL: https://github.com/nori-cloud/lab.git
+    targetRevision: HEAD
+    path: apps/nori-cloud
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: nori-cloud
+
+  syncPolicy:
+    automated:
+      enable: true
+      prune: true
+      selfHeal: true

@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: nori-cloud-appset
+  namespace: system
+spec:
+  generators:
+    - list:
+        elements:
+          - app: guestbook
+          - app: nginx
+  template:
+    metadata:
+      name: "{{app}}"
+    spec:
+      project: nori-cloud
+      source:
+        path: "apps/{{app}}"
+        repoURL: "https://github.com/nori-cloud/lab.git"
+        targetRevision: HEAD
+      destination:
+        namespace: nori-cloud
+        server: "https://kubernetes.default.svc"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
