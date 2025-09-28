@@ -1,0 +1,21 @@
+# https://goteleport.com/docs/zero-trust-access/rbac-get-started/role-templates/#sso-users
+kind: role
+version: v7
+metadata:
+  name: k3s-admin
+spec:
+  allow:
+    logins: ["{{external.logins}}"]
+    node_labels:
+      "*": "*"
+    kubernetes_labels:
+      "*": "*"
+    kubernetes_resources:
+      - kind: "*"
+        namespace: "*"
+        name: "*"
+        verbs: ["*"]
+    kubernetes_groups:
+      - cluster-admin
+    kubernetes_users:
+      - k3s-admin
