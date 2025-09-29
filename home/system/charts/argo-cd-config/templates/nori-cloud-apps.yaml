@@ -30,7 +30,7 @@ metadata:
     # Alternatively, you can use background cascading deletion
     # - resources-finalizer.argocd.argoproj.io/background
 spec:
-  project: nori-cloud
+  project: default
 
   source:
     repoURL: https://github.com/nori-cloud/lab.git
@@ -39,7 +39,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: nori-cloud
+    namespace: system
 
   syncPolicy:
     automated:
