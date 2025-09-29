@@ -25,7 +25,8 @@ spec:
   issuerRef:
     name: cloudflare-cluster-issuer-production
     kind: ClusterIssuer
-  commonName: "*.norriswu.me"
   dnsNames:
-    - "home.norriswu.me"
-    - "*.home.norriswu.me"
+    - "pawmery.pet"
+    - "*.pawmery.pet"
+    - "norriswu.me"
+    - "*.norriswu.me"
