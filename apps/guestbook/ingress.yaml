@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`guestbook-ui.norriswu.me`)
+    - match: Host(`guestbook-ui.home.norriswu.me`)
       kind: Rule
       services:
         - name: guestbook-ui
