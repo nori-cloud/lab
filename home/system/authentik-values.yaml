@@ -13,8 +13,6 @@ server:
     # Specify kubernetes ingress controller class name
     ingressClassName: traefik
     enabled: true
-    tls:
-      - secretName: cluster-certificate-secret
     hosts:
       - authentik.home.norriswu.me
 

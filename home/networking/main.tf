@@ -130,6 +130,7 @@ resource "helm_release" "cert_manager_config" {
   name      = "cert-manager-config"
   chart     = "${path.module}/charts/cert-manager"
 
+  force_update = true
   set = [
     {
       name  = "namespace"
