@@ -1,9 +1,9 @@
 resource "kubernetes_manifest" "teleport-cluster-certificate-secret" {
   manifest = {
     apiVersion = "cert-manager.io/v1"
-    kind = "Certificate"
+    kind       = "Certificate"
     metadata = {
-      name = "teleport-certificate"
+      name      = "teleport-certificate"
       namespace = kubernetes_namespace.this.metadata[0].name
     }
     spec = {
@@ -28,10 +28,10 @@ resource "helm_release" "teleport" {
 
   namespace = kubernetes_namespace.this.metadata[0].name
 
-  name = "teleport"
+  name       = "teleport"
   repository = "https://charts.releases.teleport.dev"
-  chart = "teleport-cluster"
-  version = "18.2.2"
-  
+  chart      = "teleport-cluster"
+  version    = "18.2.2"
+
   values = [file("${path.module}/teleport-cluster-values.yaml")]
 }

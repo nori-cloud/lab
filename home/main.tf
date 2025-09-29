@@ -91,7 +91,7 @@ module "networking" {
   namespace                     = "networking"
   tailscale_oauth_client_id     = var.tailscale_oauth_client_id
   tailscale_oauth_client_secret = var.tailscale_oauth_client_secret
-  cloudflare_dns_admin_token     = var.cloudflare_dns_admin_token
+  cloudflare_dns_admin_token    = var.cloudflare_dns_admin_token
 }
 
 module "system" {

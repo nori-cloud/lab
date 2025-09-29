@@ -68,7 +68,7 @@ resource "proxmox_virtual_environment_download_file" "images" {
 #     cores = 2
 #   }
 
-  
+
 
 #   memory {
 #     dedicated = 4096
