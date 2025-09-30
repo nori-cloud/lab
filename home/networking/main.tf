@@ -94,62 +94,6 @@ resource "helm_release" "tailscale_operator" {
   ]
 }
 
-variable "cloudflare_dns_admin_token" {
-  type      = string
-  sensitive = true
-}
-
-resource "kubernetes_secret" "cloudflare_creds" {
-  metadata {
-    name      = "cloudflare-creds"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    cloudflare_api_token = var.cloudflare_dns_admin_token
-  }
-}
-
-resource "helm_release" "cert_manager" {
-  depends_on = [kubernetes_secret.cloudflare_creds]
-
-  namespace = kubernetes_namespace.this.metadata[0].name
-
-  name       = "cert-manager"
-  repository = "https://charts.jetstack.io"
-  chart      = "cert-manager"
-  version    = "1.18.2"
-
-  values = [file("${path.module}/certmanager-values.yaml")]
-}
-
-resource "helm_release" "cert_manager_config" {
-  depends_on = [helm_release.cert_manager]
-
-  namespace = kubernetes_namespace.this.metadata[0].name
-  name      = "cert-manager-config"
-  chart     = "${path.module}/charts/cert-manager"
-
-  force_update = true
-  set = [
-    {
-      name  = "namespace"
-      value = kubernetes_namespace.this.metadata[0].name
-    },
-    {
-      name  = "email"
-      value = "norris.wu.au@outlook.com"
-    }
-  ]
-
-  set_list = [
-    {
-      name  = "dnsZone"
-      value = ["norriswu.me"]
-    }
-  ]
-}
-
 resource "helm_release" "traefik" {
   depends_on = [helm_release.tailscale_operator]
 

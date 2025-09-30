@@ -29,3 +29,7 @@ terraform.rc
 #
 .plan
 .ssh
+
+# 
+.env*
+!.env.example

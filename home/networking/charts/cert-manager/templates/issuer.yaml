@@ -1,51 +1,59 @@
-# # prettier-ignore
-# apiVersion: cert-manager.io/v1
-# kind: ClusterIssuer
-# metadata:
-#   name: cloudflare-cluster-issuer-staging
-#   namespace: {{ .Values.namespace }}
-# spec:
-#   acme:
-#     email: {{ .Values.email }}
-#     server: https://acme-staging-v02.api.letsencrypt.org/directory
-#     privateKeySecretRef:
-#       name: cloudflare-cluster-issuer-key
-#     solvers:
-#       - dns01:
-#           cloudflare:
-#             email: {{ .Values.email }}
-#             apiTokenSecretRef:
-#               name: cloudflare-creds
-#               key: cloudflare_api_token
-#             selector:
-#               dnsZones: {{ .Values.dnsZone }}
----
 # prettier-ignore
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: cloudflare-cluster-issuer-production
-  namespace: {{ .Values.namespace }}
+  name: cloudflare-cluster-issuer-staging
+  namespace: {{ .Release.Namespace | quote }}
 spec:
   acme:
     email: norris.wu.au@outlook.com
-    server: https://acme-v02.api.letsencrypt.org/directory
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
-      name: cloudflare-cluster-issuer-key
+      name: cloudflare-cluster-issuer-key-staging
     solvers:
       - dns01:
           cloudflare:
             email: norris.wu.au@outlook.com
             apiTokenSecretRef:
-              name: cloudflare-creds
-              key: cloudflare_api_token
+              name: cert-manager-creds
+              key: norriswu_me_cf_dns_token
             selector:
               dnsZones: norriswu.me
-      # - dns01:
-      #     cloudflare:
-      #       email: developer@pawmery.pet
-      #       apiTokenSecretRef:
-      #         name: cloudflare-pawmery-pet-creds
-      #         key: cloudflare_api_token
-      #       selector:
-      #         dnsZones: pawmery.pet
+      - dns01:
+          cloudflare:
+            email: developer@pawmery.pet
+            apiTokenSecretRef:
+              name: cert-manager-creds
+              key: pawmery_pet_cf_dns_token
+            selector:
+              dnsZones: pawmery.pet
+---
+# prettier-ignore
+# apiVersion: cert-manager.io/v1
+# kind: ClusterIssuer
+# metadata:
+#   name: cloudflare-cluster-issuer
+#   namespace: {{ .Release.Namespace | quote }}
+# spec:
+#   acme:
+#     email: norris.wu.au@outlook.com
+#     server: https://acme-v02.api.letsencrypt.org/directory
+#     privateKeySecretRef:
+#       name: cloudflare-cluster-issuer-key
+#     solvers:
+#       - dns01:
+#           cloudflare:
+#             email: norris.wu.au@outlook.com
+#             apiTokenSecretRef:
+#               name: cert-manager-creds
+#               key: norriswu_me_cf_dns_token
+#             selector:
+#               dnsZones: norriswu.me
+#       - dns01:
+#           cloudflare:
+#             email: developer@pawmery.pet
+#             apiTokenSecretRef:
+#               name: cert-manager-creds
+#               key: pawmery_pet_cf_dns_token
+#             selector:
+#               dnsZones: pawmery.pet
