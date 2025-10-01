@@ -21,7 +21,7 @@ resource "helm_release" "cert_manager" {
   chart      = "cert-manager"
   version    = "1.18.2"
 
-  values = [file("${path.module}/certmanager-values.yaml")]
+  values = [file("${path.module}/cert-manager-values.yaml")]
 }
 
 resource "helm_release" "cert_manager_config" {
@@ -31,5 +31,5 @@ resource "helm_release" "cert_manager_config" {
   name      = "cert-manager-config"
   chart     = "${path.module}/charts/cert-manager"
 
-  force_update = true
+  values = [file("${path.module}/cert-manager-config-values.yaml")]
 }

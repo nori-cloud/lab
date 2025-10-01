@@ -1,0 +1,68 @@
+issuers:
+  - name: cloudflare-cluster-issuer-staging
+    acmeEmail: norris.wu.au@outlook.com
+    acmeServer: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: cloudflare-cluster-issuer-key-staging
+    solvers:
+      - dns01:
+          cloudflare:
+            email: norris.wu.au@outlook.com
+            apiTokenSecretRef:
+              name: cert-manager-creds
+              key: norriswu_me_cf_dns_token
+        selector:
+          dnsZones:
+            - norriswu.me
+  - name: cloudflare-cluster-issuer
+    acmeEmail: norris.wu.au@outlook.com
+    acmeServer: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: cloudflare-cluster-issuer-key
+    solvers:
+      - dns01:
+          cloudflare:
+            email: norris.wu.au@outlook.com
+            apiTokenSecretRef:
+              name: cert-manager-creds
+              key: norriswu_me_cf_dns_token
+            selector:
+              dnsZones: norriswu.me
+
+certificates:
+  - name: cluster-certificate
+    namespace: networking
+    secretName: cluster-certificate-secret
+    issuerRef:
+      name: cloudflare-cluster-issuer
+      kind: ClusterIssuer
+    dnsNames:
+      - "norriswu.me"
+      - " *.norriswu.me"
+  - name: cluster-certificate-staging
+    namespace: networking
+    secretName: cluster-certificate-secret-staging
+    issuerRef:
+      name: cloudflare-cluster-issuer-staging
+      kind: ClusterIssuer
+    dnsNames:
+      - "norriswu.me"
+      - "*.norriswu.me"
+  - name: cluster-certificate
+    namespace: system
+    secretName: cluster-certificate-secret
+    issuerRef:
+      name: cloudflare-cluster-issuer
+      kind: ClusterIssuer
+    dnsNames:
+      - "norriswu.me"
+      - "*.norriswu.me"
+  - name: cluster-certificate-staging
+    namespace: system
+    secretName: cluster-certificate-secret-staging
+    issuerRef:
+      name: cloudflare-cluster-issuer-staging
+      kind: ClusterIssuer
+    dnsNames:
+      - "norriswu.me"
+      - "*.norriswu.me"
