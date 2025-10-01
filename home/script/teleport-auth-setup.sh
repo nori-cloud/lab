@@ -2,13 +2,16 @@
 
 set -e
 
+if [ -f .env ]; then
+    echo "📃 Loading .env file..."
+    source .env
+fi
+
 # GITHUB OAUTH APP
 # Teleport Non-Enterprise Cluster can only use github sso
-CLIENT_ID=$1
-CLIENT_SECRET=$2
 
-if [ -z "$CLIENT_ID" ] || [ -z "$CLIENT_SECRET" ]; then
-    echo "Usage: $0 <client_id> <client_secret>"
+if [ -z "$TELEPORT_OAUTH_CLIENT_ID" ] || [ -z "$TELEPORT_OAUTH_CLIENT_SECRET" ]; then
+    echo "Missing TELEPORT_OAUTH_CLIENT_ID or TELEPORT_OAUTH_CLIENT_SECRET in env"
     exit 1
 fi
 
