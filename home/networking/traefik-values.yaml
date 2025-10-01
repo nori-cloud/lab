@@ -20,7 +20,7 @@ ingressRoute:
     enabled: true
     entryPoints:
       - websecure
-    matchRule: Host(`traefik.home.norriswu.me`)
+    matchRule: Host(`traefik.norriswu.me`)
     tls:
       secretName: cluster-certificate-secret
 

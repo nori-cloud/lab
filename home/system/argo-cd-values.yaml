@@ -1,5 +1,5 @@
 global:
-  domain: argocd.home.norriswu.me
+  domain: argocd.norriswu.me
 
 configs:
   params:
@@ -9,7 +9,7 @@ configs:
     dex.config: |
       connectors:
       - config:
-          issuer: https://authentik.home.norriswu.me/application/o/argocd/
+          issuer: https://authentik.norriswu.me/application/o/argocd/
           clientID: $argocd-oauth-client:client-id
           clientSecret: $argocd-oauth-client:client-secret
           insecureEnableGroups: true
@@ -31,4 +31,4 @@ server:
     ingressClassName: traefik
     extraTls:
       - hosts:
-          - argocd.home.norriswu.me
+          - argocd.norriswu.me

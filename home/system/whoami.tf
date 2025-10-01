@@ -59,7 +59,7 @@ resource "kubernetes_manifest" "whoami" {
       entryPoints = ["web"]
       routes = [
         {
-          match = "Host(`whoami.home.norriswu.me`)"
+          match = "Host(`whoami.norriswu.me`)"
           kind  = "Rule"
           services = [
             {

@@ -14,7 +14,7 @@ server:
     ingressClassName: traefik
     enabled: true
     hosts:
-      - authentik.home.norriswu.me
+      - authentik.norriswu.me
 
 postgresql:
   enabled: true
