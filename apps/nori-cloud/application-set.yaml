@@ -9,6 +9,7 @@ spec:
         elements:
           - app: guppy
           - app: nginx
+          - app: postgres
   template:
     metadata:
       name: "{{app}}"
