@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guppy
+  namespace: nori-cloud
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: guppy
+  template:
+    metadata:
+      labels:
+        app: guppy
+    spec:
+      containers:
+        - image: ghcr.io/nori-cloud/guppy:sha-915c05ce5e9fe016c337630e81d6ca77bc5c4e5e
+          name: guppy
+          ports:
+            - containerPort: 3000

@@ -7,7 +7,7 @@ spec:
   generators:
     - list:
         elements:
-          - app: guestbook
+          - app: guppy
           - app: nginx
   template:
     metadata:
