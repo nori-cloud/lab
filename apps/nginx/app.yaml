@@ -42,7 +42,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`nginx.home.norriswu.me`)
+    - match: Host(`nginx.norriswu.me`)
       kind: Rule
       services:
         - name: nginx
