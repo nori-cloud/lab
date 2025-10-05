@@ -19,3 +19,5 @@ spec:
           name: guppy
           ports:
             - containerPort: 3000
+      imagePullSecrets:
+        - name: ghcr-image-pull-secret
