@@ -1,3 +1,4 @@
+# https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/deployment-guides/kubernetes/#3-create-a-tunnel
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,10 +14,33 @@ spec:
       labels:
         app: cloudflare-tunnel
     spec:
+      securityContext:
+        sysctls:
+          # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
+          - name: net.ipv4.ping_group_range
+            value: "65532 65532"
       containers:
-        - name: cloudflare-tunnel
-          image: cloudflare/cloudflared:latest
-          command: ["tunnel", "--no-autoupdate", "run"]
+        - image: cloudflare/cloudflared:latest
+          name: cloudflared
           envFrom:
             - secretRef:
                 name: cloudflare-tunnel-secret
+          command:
+            # Configures tunnel run parameters
+            - cloudflared
+            - tunnel
+            - --no-autoupdate
+            - --loglevel
+            - debug
+            - --metrics
+            - 0.0.0.0:2000
+            - run
+          livenessProbe:
+            httpGet:
+              # Cloudflared has a /ready endpoint which returns 200 if and only if
+              # it has an active connection to Cloudflare's network.
+              path: /ready
+              port: 2000
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
