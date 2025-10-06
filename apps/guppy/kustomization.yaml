@@ -3,4 +3,3 @@ resources:
   - ingress.yaml
   - service.yaml
   - migration-hook.yaml
-  - secret.yaml
