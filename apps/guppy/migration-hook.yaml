@@ -1,6 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
+  name: guppy-migration-hook
   generateName: guppy-migration-
   namespace: nori-cloud
   annotations:
