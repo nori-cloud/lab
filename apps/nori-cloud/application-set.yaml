@@ -10,6 +10,7 @@ spec:
           - app: guppy
           - app: nginx
           - app: postgres
+          - app: umami
   template:
     metadata:
       name: "{{app}}"
