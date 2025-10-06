@@ -7,6 +7,7 @@ spec:
   generators:
     - list:
         elements:
+          - app: cloudflare-tunnel
           - app: guppy
           - app: nginx
           - app: postgres

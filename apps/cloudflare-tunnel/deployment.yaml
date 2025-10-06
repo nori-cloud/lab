@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudflare-tunnel
+  namespace: nori-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloudflare-tunnel
+  template:
+    metadata:
+      labels:
+        app: cloudflare-tunnel
+    spec:
+      containers:
+        - name: cloudflare-tunnel
+          image: cloudflare/cloudflared:latest
+          command: ["tunnel", "--no-autoupdate", "run"]
+          envFrom:
+            - secretRef:
+                name: cloudflare-tunnel-secret
