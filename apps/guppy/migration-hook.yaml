@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: migrate
-          image: ghcr.io/nori-cloud/guppy-migrations:sha-4a4c5f1bd2e52d489c19b91444af8f836a6a09a7
+          image: ghcr.io/nori-cloud/guppy-migrations:sha-080b9b22e3a26e9f40bcbffdaaba75ed83399f6a
           envFrom:
             - secretRef:
                 name: guppy-secret
