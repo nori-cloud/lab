@@ -15,7 +15,7 @@ spec:
         app: guppy
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/guppy:sha-080b9b22e3a26e9f40bcbffdaaba75ed83399f6a
+        - image: ghcr.io/nori-cloud/guppy:sha-fbe0e9f484cf9d2f38eb6295112047ac10a8e718
           name: guppy
           ports:
             - containerPort: 3000
