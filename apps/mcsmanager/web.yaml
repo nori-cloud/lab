@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcsmanager-web
+  labels:
+    app: mcsmanager-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcsmanager-web
+  template:
+    metadata:
+      labels:
+        app: mcsmanager-web
+    spec:
+      containers:
+      - name: web
+        image: githubyumao/mcsmanager-web:latest
+        ports:
+        - containerPort: 23333
+        volumeMounts:
+        - name: timezone
+          mountPath: /etc/localtime
+          readOnly: true
+        - name: web-data
+          mountPath: /opt/mcsmanager/web/data
+        - name: web-logs
+          mountPath: /opt/mcsmanager/web/logs
+      volumes:
+      - name: timezone
+        hostPath:
+          path: /etc/localtime
+          type: File
+      - name: web-data
+        persistentVolumeClaim:
+          claimName: mcsmanager-web-data
+      - name: web-logs
+        persistentVolumeClaim:
+          claimName: mcsmanager-web-logs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcsmanager-web-service
+  labels:
+    app: mcsmanager-web
+spec:
+  type: ClusterIP
+  ports:
+  - port: 23333
+    targetPort: 23333
+    protocol: TCP
+  selector:
+    app: mcsmanager-web
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mcsmanager-web
+  namespace: nori-cloud
+  labels:
+    app: mcsmanager-web
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`mcsmanager.norriswu.me`)
+      kind: Rule
+      services:
+        - name: mcsmanager-web
+          port: 23333
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcsmanager-web-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mcsmanager-web-logs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

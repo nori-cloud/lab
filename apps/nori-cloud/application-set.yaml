@@ -9,6 +9,7 @@ spec:
         elements:
           - app: cloudflare-tunnel
           - app: guppy
+          - app: mcsmanager
           - app: nginx
           - app: postgres
           - app: umami
