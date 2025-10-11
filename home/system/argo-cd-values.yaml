@@ -1,5 +1,6 @@
 global:
   domain: argocd.norriswu.me
+  priorityClassName: system-cluster-critical
 
 configs:
   params:

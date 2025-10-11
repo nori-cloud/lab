@@ -1,3 +1,6 @@
+global:
+  priorityClassName: system-cluster-critical
+
 authentik:
   log_level: debug
   secret_key: "87ef52fa1d705c7e1db3d433c5c18dd0"
