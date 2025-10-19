@@ -2,6 +2,11 @@
 
 set -e
 
+if [ -f .env ]; then
+    echo "📃 Loading .env file..."
+    source .env
+fi
+
 # Usage: ./update-org-image-pull-secret.sh <namespace> [secret-name]
 # Example: ./update-org-image-pull-secret.sh nori-cloud
 # Example: ./update-org-image-pull-secret.sh pawmery-pet
