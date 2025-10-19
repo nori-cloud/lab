@@ -3,6 +3,23 @@ kind: Namespace
 metadata:
   name: nori-cloud
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ghcr-image-pull-secret
+  namespace: nori-cloud
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ""
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: nori-cloud
+imagePullSecrets:
+  - name: ghcr-image-pull-secret
+---
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/project-specification/
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject

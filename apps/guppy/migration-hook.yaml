@@ -35,6 +35,3 @@ spec:
               memory: "256Mi"
               cpu: "200m"
       restartPolicy: Never
-      # Use the same image pull secrets as the main deployment
-      imagePullSecrets:
-        - name: ghcr-image-pull-secret
