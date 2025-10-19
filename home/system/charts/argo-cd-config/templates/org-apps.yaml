@@ -5,22 +5,6 @@ kind: Namespace
 metadata:
   name: {{ .name }}
 ---
-{{- $secretName := .imagePullSecretName | default "ghcr-image-pull-secret" }}
-{{- $existingSecret := lookup "v1" "Secret" .name $secretName }}
-{{- if not $existingSecret }}
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ $secretName }}
-  namespace: {{ .name }}
-  annotations:
-    # Keep this secret on helm upgrades to preserve populated credentials
-    helm.sh/resource-policy: keep
-type: kubernetes.io/dockerconfigjson
-data:
-  .dockerconfigjson: ""
-{{- end }}
----
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/project-specification/
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
