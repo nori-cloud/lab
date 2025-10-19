@@ -3,6 +3,8 @@ FROM --platform=linux/amd64 mcr.microsoft.com/devcontainers/typescript-node:1-22
 COPY --from=ghcr.io/opentofu/opentofu:1.10.6-minimal /usr/local/bin/tofu /usr/local/bin/tofu
 COPY --from=bitnami/kubectl:latest /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/kubectl
 
+RUN npm install --global @anthropic-ai/claude-code
+
 RUN wget https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb &&\
   apt install ./k9s_linux_amd64.deb &&\
   rm k9s_linux_amd64.deb

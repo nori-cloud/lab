@@ -14,6 +14,15 @@ issuers:
         selector:
           dnsZones:
             - norriswu.me
+      - dns01:
+          cloudflare:
+            email: Zhugeruntao@gmail.com
+            apiTokenSecretRef:
+              name: cert-manager-creds
+              key: pawmery_pet_cf_dns_token
+        selector:
+          dnsZones:
+            - pawmery.pet
   - name: cloudflare-cluster-issuer
     acmeEmail: norris.wu.au@outlook.com
     acmeServer: https://acme-v02.api.letsencrypt.org/directory
@@ -38,7 +47,7 @@ certificates:
       kind: ClusterIssuer
     dnsNames:
       - "norriswu.me"
-      - " *.norriswu.me"
+      - "*.norriswu.me"
   - name: cluster-certificate-staging
     namespace: networking
     secretName: cluster-certificate-secret-staging
@@ -48,6 +57,17 @@ certificates:
     dnsNames:
       - "norriswu.me"
       - "*.norriswu.me"
+
+  - name: pawmery-pet-certificate-staging
+    namespace: networking
+    secretName: pawmery-pet-certificate-secret-staging
+    issuerRef:
+      name: cloudflare-cluster-issuer-staging
+      kind: ClusterIssuer
+    dnsNames:
+      - "pawmery.pet"
+      - "*.pawmery.pet"
+
   - name: cluster-certificate
     namespace: system
     secretName: cluster-certificate-secret
