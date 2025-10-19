@@ -2,10 +2,26 @@
 
 set -e
 
-NAMESPACE=nori-cloud
-SECRET_NAME=ghcr-image-pull-secret
+# Usage: ./update-org-image-pull-secret.sh <namespace> [secret-name]
+# Example: ./update-org-image-pull-secret.sh nori-cloud
+# Example: ./update-org-image-pull-secret.sh pawmery-pet
 
-echo "📝 Image Pull Secret Updater for nori-cloud"
+if [ -z "$1" ]; then
+    echo "❌ Error: Namespace is required"
+    echo "Usage: $0 <namespace> [secret-name]"
+    echo ""
+    echo "Examples:"
+    echo "  $0 nori-cloud"
+    echo "  $0 pawmery-pet"
+    exit 1
+fi
+
+NAMESPACE=$1
+SECRET_NAME=${2:-ghcr-image-pull-secret}
+
+echo "📝 Image Pull Secret Updater"
+echo "   Namespace: $NAMESPACE"
+echo "   Secret: $SECRET_NAME"
 echo ""
 
 # Check if credentials are provided via environment variables
@@ -55,6 +71,11 @@ else
         --docker-password="$GHCR_PAT"
     echo "✅ Secret created successfully"
 fi
+
+echo ""
+echo "🔗 Patching default ServiceAccount to use image pull secret..."
+kubectl patch serviceaccount default -n "$NAMESPACE" -p "{\"imagePullSecrets\":[{\"name\":\"$SECRET_NAME\"}]}"
+echo "✅ ServiceAccount patched successfully"
 
 echo ""
 echo "🎉 Image pull secret updated for namespace: $NAMESPACE"

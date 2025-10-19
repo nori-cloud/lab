@@ -1,0 +1,12 @@
+# List of organizations to create resources for
+orgs:
+  - name: nori-cloud
+    repoURL: https://github.com/nori-cloud/lab.git
+    appsPath: apps/nori-cloud
+    # Optional: customize secret name if needed
+    imagePullSecretName: ghcr-image-pull-secret
+  # Example for pawmery-pet (uncomment when ready):
+  # - name: pawmery-pet
+  #   repoURL: https://github.com/pawmery-pet/infra.git
+  #   appsPath: apps/pawmery-pet
+  #   imagePullSecretName: ghcr-image-pull-secret

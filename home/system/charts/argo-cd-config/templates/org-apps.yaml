@@ -1,37 +1,38 @@
+{{- range .Values.orgs }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: nori-cloud
+  name: {{ .name }}
 ---
+{{- $secretName := .imagePullSecretName | default "ghcr-image-pull-secret" }}
+{{- $existingSecret := lookup "v1" "Secret" .name $secretName }}
+{{- if not $existingSecret }}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ghcr-image-pull-secret
-  namespace: nori-cloud
+  name: {{ $secretName }}
+  namespace: {{ .name }}
+  annotations:
+    # Keep this secret on helm upgrades to preserve populated credentials
+    helm.sh/resource-policy: keep
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: ""
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: default
-  namespace: nori-cloud
-imagePullSecrets:
-  - name: ghcr-image-pull-secret
+{{- end }}
 ---
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/project-specification/
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: nori-cloud
+  name: {{ .name }}
   namespace: system
 spec:
-  destination: "nori-cloud project"
+  description: "{{ .name }} project"
   sourceRepos:
-    - https://github.com/nori-cloud/lab.git
+    - {{ .repoURL }}
   destinations:
-    - namespace: nori-cloud
+    - namespace: {{ .name }}
       server: https://kubernetes.default.svc
       name: in-cluster
 ---
@@ -39,7 +40,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nori-cloud
+  name: {{ .name }}
   namespace: system
   finalizers:
     # The default behaviour is foreground cascading deletion
@@ -50,9 +51,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/nori-cloud/lab.git
+    repoURL: {{ .repoURL }}
     targetRevision: HEAD
-    path: apps/nori-cloud
+    path: {{ .appsPath }}
 
   destination:
     server: https://kubernetes.default.svc
@@ -63,3 +64,4 @@ spec:
       enable: true
       prune: true
       selfHeal: true
+{{- end }}

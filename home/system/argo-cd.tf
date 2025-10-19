@@ -31,4 +31,6 @@ resource "helm_release" "argo-cd-config" {
   namespace = kubernetes_namespace.this.metadata[0].name
   name      = "argo-cd-config"
   chart     = "${path.module}/charts/argo-cd-config"
+
+  values = [file("${path.module}/argo-cd-config-values.yaml")]
 }
