@@ -35,8 +35,18 @@ issuers:
             apiTokenSecretRef:
               name: cert-manager-creds
               key: norriswu_me_cf_dns_token
-            selector:
-              dnsZones: norriswu.me
+        selector:
+          dnsZones:
+            - norriswu.me
+      - dns01:
+          cloudflare:
+            email: Zhugeruntao@gmail.com
+            apiTokenSecretRef:
+              name: cert-manager-creds
+              key: pawmery_pet_cf_dns_token
+        selector:
+          dnsZones:
+            - pawmery.pet
 
 certificates:
   - name: cluster-certificate
@@ -48,25 +58,15 @@ certificates:
     dnsNames:
       - "norriswu.me"
       - "*.norriswu.me"
-  - name: cluster-certificate-staging
-    namespace: networking
-    secretName: cluster-certificate-secret-staging
-    issuerRef:
-      name: cloudflare-cluster-issuer-staging
-      kind: ClusterIssuer
-    dnsNames:
-      - "norriswu.me"
-      - "*.norriswu.me"
-
-  - name: pawmery-pet-certificate-staging
-    namespace: networking
-    secretName: pawmery-pet-certificate-secret-staging
-    issuerRef:
-      name: cloudflare-cluster-issuer-staging
-      kind: ClusterIssuer
-    dnsNames:
-      - "pawmery.pet"
-      - "*.pawmery.pet"
+  # - name: cluster-certificate-staging
+  #   namespace: networking
+  #   secretName: cluster-certificate-secret-staging
+  #   issuerRef:
+  #     name: cloudflare-cluster-issuer-staging
+  #     kind: ClusterIssuer
+  #   dnsNames:
+  #     - "norriswu.me"
+  #     - "*.norriswu.me"
 
   - name: cluster-certificate
     namespace: system
@@ -77,12 +77,31 @@ certificates:
     dnsNames:
       - "norriswu.me"
       - "*.norriswu.me"
-  - name: cluster-certificate-staging
-    namespace: system
-    secretName: cluster-certificate-secret-staging
+  # - name: cluster-certificate-staging
+  #   namespace: system
+  #   secretName: cluster-certificate-secret-staging
+  #   issuerRef:
+  #     name: cloudflare-cluster-issuer-staging
+  #     kind: ClusterIssuer
+  #   dnsNames:
+  #     - "norriswu.me"
+  #     - "*.norriswu.me"
+
+  - name: pawmery-pet-certificate
+    namespace: pawmery-pet
+    secretName: pawmery-pet-certificate-secret
     issuerRef:
-      name: cloudflare-cluster-issuer-staging
+      name: cloudflare-cluster-issuer
       kind: ClusterIssuer
     dnsNames:
-      - "norriswu.me"
-      - "*.norriswu.me"
+      - "pawmery.pet"
+      - "*.pawmery.pet"
+  # - name: pawmery-pet-certificate-staging
+  #   namespace: networking
+  #   secretName: pawmery-pet-certificate-secret-staging
+  #   issuerRef:
+  #     name: cloudflare-cluster-issuer-staging
+  #     kind: ClusterIssuer
+  #   dnsNames:
+  #     - "pawmery.pet"
+  #     - "*.pawmery.pet"
