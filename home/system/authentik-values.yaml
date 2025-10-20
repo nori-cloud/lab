@@ -18,6 +18,8 @@ server:
     enabled: true
     hosts:
       - authentik.norriswu.me
+      - auth.norriswu.me
+      - auth.pawmery.pet
 
 postgresql:
   enabled: true
