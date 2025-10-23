@@ -1,3 +1,5 @@
+priorityClassName: system-cluster-critical
+
 service:
   annotations:
     tailscale.com/hostname: home
