@@ -29,3 +29,6 @@ RUN curl -O https://cdn.teleport.dev/teleport-v18.2.2-linux-amd64-bin.tar.gz &&\
   cd teleport &&\
   sudo ./install &&\
   rm -rf teleport-v18.2.2-linux-amd64-bin.tar.gz teleport-v18.2.2-linux-amd64-bin
+
+# https://docs.siderolabs.com/talos/v1.12/getting-started/talosctl#alternative-install
+RUN curl -sL https://talos.dev/install | sh
