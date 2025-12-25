@@ -25,14 +25,14 @@ terraform {
   }
 }
 
-variable "proxmox_username" {
-  type = string
-}
+# variable "proxmox_username" {
+#   type = string
+# }
 
-variable "proxmox_api_token" {
-  type      = string
-  sensitive = true
-}
+# variable "proxmox_api_token" {
+#   type      = string
+#   sensitive = true
+# }
 
 # provider "proxmox" {
 #   endpoint  = "https://192.168.0.100:8006/"
