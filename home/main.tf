@@ -15,6 +15,15 @@ terraform {
       source  = "hashicorp/helm"
       version = "3.0.2"
     }
+    # https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "1.19.0"
+    }
+    http = {
+      source  = "hashicorp/http"
+      version = "3.5.0"
+    }
   }
 
   backend "s3" {
@@ -52,6 +61,10 @@ provider "helm" {
   kubernetes = {
     config_path = "~/.kube/config"
   }
+}
+
+provider "kubectl" {
+  config_path = "~/.kube/config"
 }
 
 locals {
