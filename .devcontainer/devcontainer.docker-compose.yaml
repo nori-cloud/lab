@@ -1,57 +1,12 @@
 services:
-    workspace:
-        build:
-            context: ..
-            dockerfile: .devcontainer/Dockerfile
-        command: sleep infinity
-        volumes:
-            - ../..:/workspace:cached
-            - workspace_config_277549:/home/node/
-        depends_on:
-            - whisper
-            - kokoro
-            - livekit
-        environment:
-            - VOICEMODE_TTS_BASE_URLS=http://kokoro:8880/v1
-            - VOICEMODE_STT_BASE_URLS=http://whisper:8000/v1
-            - VOICEMODE_TRANSPORT=livekit
-            - LIVEKIT_URL=ws://livekit:7880
-            - LIVEKIT_API_KEY=devkey
-            - LIVEKIT_API_SECRET=devsecret123456789012345678901234
-
-    livekit:
-        image: livekit/livekit-server:latest
-        command: --dev --bind 0.0.0.0
-        ports:
-            - '7880:7880'
-            - '7881:7881'
-        environment:
-            - LIVEKIT_KEYS=devkey:devsecret123456789012345678901234
-
-    whisper:
-        image: fedirz/faster-whisper-server:latest-cpu
-        ports:
-            - '2022:8000'
-        environment:
-            - WHISPER__MODEL=Systran/faster-whisper-small
-            - WHISPER__INFERENCE_DEVICE=cpu
-
-    kokoro:
-        image: ghcr.io/remsky/kokoro-fastapi-cpu:latest
-        ports:
-            - '8880:8880'
-
-    livekit-frontend:
-        image: livekit/meet:latest
-        ports:
-            - '3000:3000'
-        environment:
-            - LIVEKIT_API_KEY=devkey
-            - LIVEKIT_API_SECRET=devsecret123456789012345678901234
-            - LIVEKIT_URL=ws://localhost:7880
-            - NEXT_PUBLIC_LIVEKIT_URL=ws://localhost:7880
-        depends_on:
-            - livekit
+  workspace:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    command: sleep infinity
+    volumes:
+      - ../..:/workspace:cached
+      - workspace_config_277549:/home/node/
 
 volumes:
-    workspace_config_277549:
+  workspace_config_277549:
