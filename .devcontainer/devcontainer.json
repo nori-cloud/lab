@@ -3,10 +3,17 @@
 	"dockerComposeFile": "devcontainer.docker-compose.yaml",
 	"service": "workspace",
 	"workspaceFolder": "/workspace/${localWorkspaceFolderBasename}",
+	"forwardPorts": [2022, 8880, 7880, 3000],
+	"portsAttributes": {
+		"2022": { "label": "Whisper STT", "onAutoForward": "silent" },
+		"8880": { "label": "Kokoro TTS", "onAutoForward": "silent" },
+		"7880": { "label": "LiveKit Server", "onAutoForward": "silent" },
+		"3000": { "label": "LiveKit Meet (Audio)", "onAutoForward": "notify" }
+	},
 	"features": {
 		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/devcontainers/features/aws-cli:1": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+		"ghcr.io/devcontainers/features/docker-outside-of-docker": {}
 	},
 	"customizations": {
 		"vscode": {

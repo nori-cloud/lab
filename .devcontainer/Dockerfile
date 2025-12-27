@@ -32,3 +32,7 @@ RUN curl -O https://cdn.teleport.dev/teleport-v18.2.2-linux-amd64-bin.tar.gz &&\
 
 # https://docs.siderolabs.com/talos/v1.12/getting-started/talosctl#alternative-install
 RUN curl -sL https://talos.dev/install | sh
+
+# https://github.com/mbailey/voicemode?tab=readme-ov-file#installation
+RUN apt update
+RUN apt install -y ffmpeg gcc libasound2-dev libasound2-plugins libportaudio2 portaudio19-dev pulseaudio pulseaudio-utils python3-dev
