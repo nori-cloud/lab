@@ -83,22 +83,11 @@ output "cluster_ns" {
   value = module.cluster.all-ns
 }
 
-variable "tailscale_oauth_client_id" {
-  type = string
-}
-
-variable "tailscale_oauth_client_secret" {
-  type      = string
-  sensitive = true
-}
-
 module "networking" {
   depends_on = [module.cluster]
   source     = "./networking"
 
-  namespace                     = "networking"
-  tailscale_oauth_client_id     = var.tailscale_oauth_client_id
-  tailscale_oauth_client_secret = var.tailscale_oauth_client_secret
+  namespace = "networking"
 }
 
 module "system" {
