@@ -4,6 +4,15 @@ resource "helm_release" "metallb" {
   chart      = "metallb"
   repository = "https://metallb.github.io/metallb"
   version    = "0.15.2"
+
+  # Required for Talos control plane nodes
+  # See: https://github.com/siderolabs/talos/issues/10291
+  set = [
+    {
+      name  = "speaker.ignoreExcludeLB"
+      value = "true"
+    }
+  ]
 }
 
 resource "helm_release" "metallb_address_config" {
