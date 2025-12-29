@@ -48,7 +48,7 @@ resource "helm_release" "tailscale_operator" {
   name       = "tailscale-operator"
   repository = "https://pkgs.tailscale.com/helmcharts"
   chart      = "tailscale-operator"
-  version    = "1.86.5"
+  version    = "1.92.4"
 
   # Don't set oauth credentials - operator will read from pre-created secret named "operator-oauth"
   # Secret must contain keys: client_id, client_secret
