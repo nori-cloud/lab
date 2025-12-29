@@ -26,3 +26,5 @@ driver:
     # Driver config is stored in a Kubernetes secret
     # Create the secret using: ./setup-democratic-csi-secret.sh
     existingConfigSecret: democratic-csi-driver-config
+    config:
+        driver: freenas-iscsi
