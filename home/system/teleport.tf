@@ -9,7 +9,7 @@ resource "kubernetes_manifest" "teleport-cluster-certificate-secret" {
     spec = {
       secretName = "teleport-certificate-secret"
       issuerRef = {
-        name = "cloudflare-cluster-issuer"
+        name = "letsencrypt-cloudflare"
         kind = "ClusterIssuer"
       }
       commonName = "teleport.norriswu.me"

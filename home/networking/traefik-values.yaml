@@ -23,7 +23,7 @@ ingressRoute:
       - websecure
     matchRule: Host(`traefik.norriswu.me`)
     tls:
-      secretName: cluster-certificate-secret
+      secretName: norriswu-me-wildcard-tls
 
 providers:
   kubernetesCRD:

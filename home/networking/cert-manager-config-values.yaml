@@ -1,107 +1,60 @@
 issuers:
-  - name: cloudflare-cluster-issuer-staging
-    acmeEmail: norris.wu.au@outlook.com
-    acmeServer: https://acme-staging-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: cloudflare-cluster-issuer-key-staging
-    solvers:
-      - dns01:
-          cloudflare:
-            email: norris.wu.au@outlook.com
-            apiTokenSecretRef:
-              name: cert-manager-creds
-              key: norriswu_me_cf_dns_token
-        selector:
-          dnsZones:
-            - norriswu.me
-      - dns01:
-          cloudflare:
-            email: Zhugeruntao@gmail.com
-            apiTokenSecretRef:
-              name: cert-manager-creds
-              key: pawmery_pet_cf_dns_token
-        selector:
-          dnsZones:
-            - pawmery.pet
-  - name: cloudflare-cluster-issuer
-    acmeEmail: norris.wu.au@outlook.com
-    acmeServer: https://acme-v02.api.letsencrypt.org/directory
-    privateKeySecretRef:
-      name: cloudflare-cluster-issuer-key
-    solvers:
-      - dns01:
-          cloudflare:
-            email: norris.wu.au@outlook.com
-            apiTokenSecretRef:
-              name: cert-manager-creds
-              key: norriswu_me_cf_dns_token
-        selector:
-          dnsZones:
-            - norriswu.me
-      - dns01:
-          cloudflare:
-            email: Zhugeruntao@gmail.com
-            apiTokenSecretRef:
-              name: cert-manager-creds
-              key: pawmery_pet_cf_dns_token
-        selector:
-          dnsZones:
-            - pawmery.pet
+    - name: letsencrypt-cloudflare-staging
+      acmeEmail: norris.wu.au@outlook.com
+      acmeServer: https://acme-staging-v02.api.letsencrypt.org/directory
+      privateKeySecretRef:
+          name: letsencrypt-cloudflare-staging-key
+      solvers:
+          - dns01:
+                cloudflare:
+                    email: norris.wu.au@outlook.com
+                    apiTokenSecretRef:
+                        name: cert-manager-creds
+                        key: norriswu_me_cf_dns_token
+            selector:
+                dnsZones:
+                    - norriswu.me
+          # - dns01:
+          #       cloudflare:
+          #           email: Zhugeruntao@gmail.com
+          #           apiTokenSecretRef:
+          #               name: cert-manager-creds
+          #               key: pawmery_pet_cf_dns_token
+          #   selector:
+          #       dnsZones:
+          #           - pawmery.pet
+    - name: letsencrypt-cloudflare
+      acmeEmail: norris.wu.au@outlook.com
+      acmeServer: https://acme-v02.api.letsencrypt.org/directory
+      privateKeySecretRef:
+          name: letsencrypt-cloudflare-key
+      solvers:
+          - dns01:
+                cloudflare:
+                    email: norris.wu.au@outlook.com
+                    apiTokenSecretRef:
+                        name: cert-manager-creds
+                        key: norriswu_me_cf_dns_token
+            selector:
+                dnsZones:
+                    - norriswu.me
+          # - dns01:
+          #     cloudflare:
+          #       email: Zhugeruntao@gmail.com
+          #       apiTokenSecretRef:
+          #         name: cert-manager-creds
+          #         key: pawmery_pet_cf_dns_token
+          #   selector:
+          #     dnsZones:
+          #       - pawmery.pet
 
 certificates:
-  - name: cluster-certificate
-    namespace: networking
-    secretName: cluster-certificate-secret
-    issuerRef:
-      name: cloudflare-cluster-issuer
-      kind: ClusterIssuer
-    dnsNames:
-      - "norriswu.me"
-      - "*.norriswu.me"
-  # - name: cluster-certificate-staging
-  #   namespace: networking
-  #   secretName: cluster-certificate-secret-staging
-  #   issuerRef:
-  #     name: cloudflare-cluster-issuer-staging
-  #     kind: ClusterIssuer
-  #   dnsNames:
-  #     - "norriswu.me"
-  #     - "*.norriswu.me"
-
-  - name: cluster-certificate
-    namespace: system
-    secretName: cluster-certificate-secret
-    issuerRef:
-      name: cloudflare-cluster-issuer
-      kind: ClusterIssuer
-    dnsNames:
-      - "norriswu.me"
-      - "*.norriswu.me"
-  # - name: cluster-certificate-staging
-  #   namespace: system
-  #   secretName: cluster-certificate-secret-staging
-  #   issuerRef:
-  #     name: cloudflare-cluster-issuer-staging
-  #     kind: ClusterIssuer
-  #   dnsNames:
-  #     - "norriswu.me"
-  #     - "*.norriswu.me"
-
-  - name: pawmery-pet-certificate
-    namespace: pawmery-pet
-    secretName: pawmery-pet-certificate-secret
-    issuerRef:
-      name: cloudflare-cluster-issuer
-      kind: ClusterIssuer
-    dnsNames:
-      - "pawmery.pet"
-      - "*.pawmery.pet"
-  # - name: pawmery-pet-certificate-staging
-  #   namespace: networking
-  #   secretName: pawmery-pet-certificate-secret-staging
-  #   issuerRef:
-  #     name: cloudflare-cluster-issuer-staging
-  #     kind: ClusterIssuer
-  #   dnsNames:
-  #     - "pawmery.pet"
-  #     - "*.pawmery.pet"
+    - name: norriswu-me-wildcard
+      namespace: networking
+      secretName: norriswu-me-wildcard-tls
+      issuerRef:
+          name: letsencrypt-cloudflare
+          kind: ClusterIssuer
+      dnsNames:
+          - 'norriswu.me'
+          - '*.norriswu.me'
