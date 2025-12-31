@@ -1,0 +1,57 @@
+global:
+    priorityClassName: system-cluster-critical
+    env:
+        # External PostgreSQL configuration
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          valueFrom:
+              secretKeyRef:
+                  name: authentik-credentials
+                  key: postgres_host
+        - name: AUTHENTIK_POSTGRESQL__PORT
+          value: '5432'
+        - name: AUTHENTIK_POSTGRESQL__NAME
+          valueFrom:
+              secretKeyRef:
+                  name: authentik-credentials
+                  key: postgres_name
+        - name: AUTHENTIK_POSTGRESQL__USER
+          valueFrom:
+              secretKeyRef:
+                  name: authentik-credentials
+                  key: postgres_user
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+              secretKeyRef:
+                  name: authentik-credentials
+                  key: postgres_password
+        # Authentik secret key
+        - name: AUTHENTIK_SECRET_KEY
+          valueFrom:
+              secretKeyRef:
+                  name: authentik-credentials
+                  key: secret_key
+
+authentik:
+    log_level: info
+    error_reporting:
+        enabled: false
+
+server:
+    replicas: 1
+    ingress:
+        ingressClassName: traefik
+        enabled: true
+        hosts:
+            - authentik.home.norriswu.me
+            - auth.home.norriswu.me
+            - auth.norriswu.me
+
+worker:
+    replicas: 1
+
+# Disable embedded PostgreSQL - using external instance
+postgresql:
+    enabled: false
+
+redis:
+    enabled: true

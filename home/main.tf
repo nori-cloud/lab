@@ -62,6 +62,11 @@ module "networking" {
   namespace = "networking"
 }
 
+module "authentik" {
+  depends_on = [module.networking]
+  source     = "./_authentik"
+}
+
 module "system" {
   depends_on = [module.networking]
   source     = "./system"
