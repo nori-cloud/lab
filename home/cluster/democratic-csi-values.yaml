@@ -28,3 +28,5 @@ driver:
     existingConfigSecret: democratic-csi-driver-config
     config:
         driver: freenas-iscsi
+        httpConnection:
+            apiVersion: 2

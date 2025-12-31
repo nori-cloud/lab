@@ -63,6 +63,7 @@ httpConnection:
     username: ${USERNAME}
     password: ${PASSWORD}
     allowInsecure: true
+    apiVersion: 2
 sshConnection:
     host: ${HOST}
     port: 22
