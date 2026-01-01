@@ -1,0 +1,5 @@
+apiVersion: v2
+name: external-secrets-config
+description: SecretStore configuration for External Secrets Operator with Infisical
+type: application
+version: 0.1.0

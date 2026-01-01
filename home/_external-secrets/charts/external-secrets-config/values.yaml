@@ -1,0 +1,6 @@
+infisical:
+  host: "http://10.0.0.241"
+  projectSlug: ""
+  environment: "prod"
+  secretsPath: "/"
+  recursive: true

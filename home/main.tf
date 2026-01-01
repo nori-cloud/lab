@@ -51,6 +51,17 @@ module "cluster" {
   source = "./cluster"
 }
 
+
+module "external_secrets" {
+  source = "./_external-secrets"
+
+  namespace              = "external-secrets"
+  infisical_host         = "https://infisical.home.norriswu.me"
+  infisical_project_slug = "talos-v-czy"
+  infisical_environment  = "prod"
+}
+
+
 output "cluster_ns" {
   value = module.cluster.all-ns
 }
