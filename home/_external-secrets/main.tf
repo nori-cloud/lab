@@ -59,7 +59,7 @@ resource "helm_release" "external_secrets" {
   name       = "external-secrets"
   repository = "https://charts.external-secrets.io"
   chart      = "external-secrets"
-  version    = "0.12.1"
+  version    = "1.2.0"
 
   values = [file("${path.module}/external-secrets-values.yaml")]
 }
