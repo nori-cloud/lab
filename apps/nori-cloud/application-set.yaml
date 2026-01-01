@@ -10,10 +10,6 @@ spec:
           - app: cloudflare-tunnel
           - app: guppy
           - app: infisical-secretstore
-          # - app: mcsmanager
-          - app: nginx
-          - app: postgres
-          - app: umami
   template:
     metadata:
       name: "{{app}}"
