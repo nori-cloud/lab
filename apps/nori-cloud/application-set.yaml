@@ -11,6 +11,7 @@ spec:
           - app: ghcr-credentials
           - app: guppy
           - app: infisical-secretstore
+          - app: postgres
   template:
     metadata:
       name: "{{app}}"
