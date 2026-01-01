@@ -1,0 +1,4 @@
+apiVersion: v2
+name: argo-cd-pre-install-config
+type: application
+version: 0.1.0

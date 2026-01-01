@@ -78,6 +78,11 @@ module "authentik" {
   source     = "./_authentik"
 }
 
+module "argocd" {
+  depends_on = [module.external_secrets]
+  source     = "./_argocd"
+}
+
 module "system" {
   depends_on = [module.networking]
   source     = "./system"
