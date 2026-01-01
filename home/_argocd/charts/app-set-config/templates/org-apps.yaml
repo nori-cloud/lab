@@ -41,7 +41,7 @@ spec:
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: system
+    namespace: {{ $.Release.Namespace | quote }}
 
   syncPolicy:
     automated:

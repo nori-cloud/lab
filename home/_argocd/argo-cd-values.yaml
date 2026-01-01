@@ -1,5 +1,5 @@
 global:
-    domain: argocd.norriswu.me
+    domain: argocd.home.norriswu.me
     priorityClassName: system-cluster-critical
 
 configs:
@@ -10,7 +10,7 @@ configs:
         dex.config: |
             connectors:
             - config:
-                issuer: https://authentik.norriswu.me/application/o/argocd/
+                issuer: $argocd-oauth-client:ARGOCD_OAUTH_CLIENT_ISSUER
                 clientID: $argocd-oauth-client:ARGOCD_OAUTH_CLIENT_ID
                 clientSecret: $argocd-oauth-client:ARGOCD_OAUTH_CLIENT_SECRET
                 insecureEnableGroups: true
@@ -30,7 +30,8 @@ server:
     ingress:
         enabled: true
         ingressClassName: traefik
-        extraTls:
-            - hosts:
-                  - argocd.home.norriswu.me
-                  - argocd.norriswu.me
+        extraHosts:
+            - name: argocd.norriswu.me
+
+applicationSet:
+    allowAnyNamespace: true
