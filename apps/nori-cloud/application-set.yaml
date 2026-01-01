@@ -8,6 +8,7 @@ spec:
     - list:
         elements:
           - app: cloudflare-tunnel
+          - app: ghcr-credentials
           - app: guppy
           - app: infisical-secretstore
   template:

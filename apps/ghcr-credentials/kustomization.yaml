@@ -1,0 +1,8 @@
+resources:
+  - external-secret.yaml
+
+patches:
+  - path: serviceaccount-patch.yaml
+    target:
+      kind: ServiceAccount
+      name: default
