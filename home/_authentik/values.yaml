@@ -1,35 +1,8 @@
 global:
     priorityClassName: system-cluster-critical
-    env:
-        # External PostgreSQL configuration
-        - name: AUTHENTIK_POSTGRESQL__HOST
-          valueFrom:
-              secretKeyRef:
-                  name: authentik-credentials
-                  key: postgres_host
-        - name: AUTHENTIK_POSTGRESQL__PORT
-          value: '5432'
-        - name: AUTHENTIK_POSTGRESQL__NAME
-          valueFrom:
-              secretKeyRef:
-                  name: authentik-credentials
-                  key: postgres_name
-        - name: AUTHENTIK_POSTGRESQL__USER
-          valueFrom:
-              secretKeyRef:
-                  name: authentik-credentials
-                  key: postgres_user
-        - name: AUTHENTIK_POSTGRESQL__PASSWORD
-          valueFrom:
-              secretKeyRef:
-                  name: authentik-credentials
-                  key: postgres_password
-        # Authentik secret key
-        - name: AUTHENTIK_SECRET_KEY
-          valueFrom:
-              secretKeyRef:
-                  name: authentik-credentials
-                  key: secret_key
+    envFrom:
+        - secretRef:
+              name: authentik-credentials
 
 authentik:
     log_level: info

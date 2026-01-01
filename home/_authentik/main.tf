@@ -20,7 +20,14 @@ resource "kubernetes_namespace" "this" {
   }
 }
 
+resource "helm_release" "authentik_config" {
+  namespace = kubernetes_namespace.this.metadata[0].name
+  name      = "authentik-config"
+  chart     = "${path.module}/charts/config"
+}
+
 resource "helm_release" "authentik" {
+  depends_on = [helm_release.authentik_config]
   namespace  = kubernetes_namespace.this.metadata[0].name
 
   name       = "authentik"
