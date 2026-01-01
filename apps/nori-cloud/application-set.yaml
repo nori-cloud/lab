@@ -12,6 +12,7 @@ spec:
           - app: guppy
           - app: infisical-secretstore
           - app: postgres
+          - app: actual-budget
   template:
     metadata:
       name: "{{app}}"
