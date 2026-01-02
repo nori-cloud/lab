@@ -51,6 +51,21 @@ module "cluster" {
   source = "./cluster"
 }
 
+variable "deploy_democratic_csi_drivers" {
+  type        = bool
+  description = "Set to true after democratic-csi secrets are populated"
+  default     = false
+}
+
+module "democratic_csi" {
+  depends_on = [module.cluster]
+  source     = "./_democratic-csi"
+
+  namespace      = "democratic-csi"
+  truenas_host   = "10.0.0.251"
+  deploy_drivers = var.deploy_democratic_csi_drivers
+}
+
 
 module "external_secrets" {
   source = "./_external-secrets"
