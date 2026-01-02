@@ -39,7 +39,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: iscsi
+        storageClassName: freenas-iscsi
         resources:
           requests:
             storage: 128Gi
