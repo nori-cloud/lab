@@ -8,7 +8,6 @@ spec:
     - list:
         elements:
           - app: cloudflare-tunnel
-          - app: minecraft
           - app: ghcr-credentials
           - app: guppy
           - app: infisical-secretstore
