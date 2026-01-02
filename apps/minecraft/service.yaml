@@ -1,13 +1,29 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: disco-panel
+  name: crafty
   namespace: nori-cloud
 spec:
   type: ClusterIP
   selector:
-    app: disco-panel
+    app: crafty
   ports:
-    - port: 8080
-      targetPort: 8080
-      name: http
+    - port: 8443
+      targetPort: 8443
+      name: https
+    - port: 8123
+      targetPort: 8123
+      name: dynmap
+    - port: 19132
+      targetPort: 19132
+      protocol: UDP
+      name: bedrock
+    - port: 25565
+      targetPort: 25565
+      name: mc-0
+    - port: 25566
+      targetPort: 25566
+      name: mc-1
+    - port: 25567
+      targetPort: 25567
+      name: mc-2

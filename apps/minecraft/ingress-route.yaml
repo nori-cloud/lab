@@ -1,10 +1,18 @@
 apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: crafty-transport
+  namespace: nori-cloud
+spec:
+  insecureSkipVerify: true
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: disco-panel
+  name: crafty
   namespace: nori-cloud
   labels:
-    app: disco-panel
+    app: crafty
 spec:
   entryPoints:
     - websecure
@@ -12,5 +20,7 @@ spec:
     - match: Host(`mc.norriswu.me`)
       kind: Rule
       services:
-        - name: disco-panel
-          port: 8080
+        - name: crafty
+          port: 8443
+          scheme: https
+          serversTransport: crafty-transport

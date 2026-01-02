@@ -1,97 +1,75 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: disco-panel
+  name: crafty
   namespace: nori-cloud
 spec:
-  serviceName: disco-panel
+  serviceName: crafty
   replicas: 1
   selector:
     matchLabels:
-      app: disco-panel
+      app: crafty
   template:
     metadata:
       labels:
-        app: disco-panel
+        app: crafty
     spec:
       containers:
-        - name: disco-panel
-          image: nickheyer/discopanel:latest
+        - name: crafty
+          image: arcadiatechnology/crafty-4:latest
           env:
-            - name: DISCOPANEL_DATA_DIR
-              value: /app/data
-            - name: DOCKER_HOST
-              value: tcp://localhost:2375
             - name: TZ
               value: Australia/Sydney
           ports:
-            - containerPort: 8080
-              name: http
-          volumeMounts:
-            - name: disco-data
-              mountPath: /app/data
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "100m"
-            limits:
-              memory: "1Gi"
-              cpu: "500m"
-        - name: dind
-          image: docker:dind
-          securityContext:
-            privileged: true
-          env:
-            - name: DOCKER_TLS_CERTDIR
-              value: ""
-          ports:
+            - containerPort: 8443
+              name: https
+            - containerPort: 8123
+              name: dynmap
+            - containerPort: 19132
+              protocol: UDP
+              name: bedrock
             - containerPort: 25565
               name: mc-0
             - containerPort: 25566
               name: mc-1
             - containerPort: 25567
               name: mc-2
-            - containerPort: 25568
-              name: mc-3
-            - containerPort: 25569
-              name: mc-4
-            - containerPort: 25570
-              name: mc-5
-            - containerPort: 25571
-              name: mc-6
-            - containerPort: 25572
-              name: mc-7
-            - containerPort: 25573
-              name: mc-8
-            - containerPort: 25574
-              name: mc-9
-            - containerPort: 25575
-              name: mc-10
           volumeMounts:
-            - name: disco-data
-              mountPath: /app/data
-            - name: dind-storage
-              mountPath: /var/lib/docker
+            - name: crafty-data
+              mountPath: /crafty/backups
+              subPath: backups
+            - name: crafty-data
+              mountPath: /crafty/logs
+              subPath: logs
+            - name: crafty-data
+              mountPath: /crafty/servers
+              subPath: servers
+            - name: crafty-data
+              mountPath: /crafty/app/config
+              subPath: config
+            - name: crafty-data
+              mountPath: /crafty/import
+              subPath: import
           resources:
             requests:
               memory: "512Mi"
               cpu: "200m"
             limits:
-              memory: "2Gi"
-              cpu: "1000m"
+              memory: "4Gi"
+              cpu: "2000m"
         - name: playit
           image: ghcr.io/playit-cloud/playit-agent:latest
           env:
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: disco-panel-secret
+                  name: crafty-secret
                   key: PLAYIT_SECRET_KEY
           ports:
             - containerPort: 80
               name: http
             - containerPort: 443
-              name: https
+              name: https-playit
           resources:
             requests:
               memory: "64Mi"
@@ -101,20 +79,11 @@ spec:
               cpu: "100m"
   volumeClaimTemplates:
     - metadata:
-        name: disco-data
+        name: crafty-data
       spec:
         accessModes:
           - ReadWriteOnce
         storageClassName: freenas-nfs
         resources:
           requests:
-            storage: 50Gi
-    - metadata:
-        name: dind-storage
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        storageClassName: freenas-nfs
-        resources:
-          requests:
-            storage: 100Gi
+            storage: 30Gi
