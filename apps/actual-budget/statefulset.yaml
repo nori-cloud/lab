@@ -17,6 +17,9 @@ spec:
       containers:
         - name: actual-budget
           image: actualbudget/actual-server:latest
+          envFrom:
+            - secretRef:
+                name: actual-budget-secret
           ports:
             - containerPort: 5006
               name: http
