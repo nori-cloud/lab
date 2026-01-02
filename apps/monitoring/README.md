@@ -2,6 +2,8 @@
 
 Prometheus-based monitoring for the Talos Kubernetes cluster.
 
+All components are deployed to the `nori-cloud` namespace.
+
 ## Components
 
 | Component | Description |
@@ -34,9 +36,8 @@ Grafana is **not** deployed - uses external instance.
 ## Deployment
 
 Deployed via Argo CD ApplicationSet. The `monitoring` app deploys:
-1. `monitoring` namespace
-2. Argo CD Application for `kube-prometheus-stack` Helm chart
-3. LoadBalancer services for external access
+1. Argo CD Application for `kube-prometheus-stack` Helm chart
+2. LoadBalancer services for external access
 
 ## Testing
 
@@ -46,17 +47,17 @@ Deployed via Argo CD ApplicationSet. The `monitoring` app deploys:
 # Argo CD applications
 kubectl get applications -n argo-cd | grep -E "monitoring|kube-prometheus"
 
-# Pods in monitoring namespace
-kubectl get pods -n monitoring
+# Pods
+kubectl get pods -n nori-cloud -l "app.kubernetes.io/instance=kube-prometheus-stack"
 
 # Services
-kubectl get svc -n monitoring
+kubectl get svc -n nori-cloud | grep -E "prometheus|alertmanager"
 ```
 
 ### Get LoadBalancer IPs
 
 ```bash
-kubectl get svc -n monitoring prometheus-lb alertmanager-lb
+kubectl get svc -n nori-cloud prometheus-lb alertmanager-lb
 ```
 
 Example output:
@@ -70,7 +71,7 @@ alertmanager-lb   LoadBalancer   10.96.x.x       192.168.0.15x   9093:xxxxx/TCP
 
 ```bash
 # Port-forward to Prometheus UI
-kubectl port-forward -n monitoring svc/prometheus-lb 9090:9090
+kubectl port-forward -n nori-cloud svc/prometheus-lb 9090:9090
 
 # Open http://localhost:9090/targets to see scrape targets
 ```
@@ -210,6 +211,6 @@ curl http://<node-ip>:9100/metrics
 
 Check storage class:
 ```bash
-kubectl get pvc -n monitoring
+kubectl get pvc -n nori-cloud
 kubectl get storageclass
 ```
