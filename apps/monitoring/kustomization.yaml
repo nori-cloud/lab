@@ -1,0 +1,5 @@
+resources:
+  - namespace.yaml
+  - application.yaml
+  - prometheus-lb.yaml
+  - alertmanager-lb.yaml
