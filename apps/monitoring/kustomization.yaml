@@ -1,4 +1,0 @@
-resources:
-  - application.yaml
-  - prometheus-lb.yaml
-  - alertmanager-lb.yaml

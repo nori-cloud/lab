@@ -34,14 +34,14 @@ prometheus:
 
     # Scrape Talos node metrics (replaces node-exporter)
     additionalScrapeConfigs:
-      - job_name: 'talos-nodes'
+      - job_name: "talos-nodes"
         kubernetes_sd_configs:
           - role: node
         relabel_configs:
           - source_labels: [__address__]
-            regex: '(.+):(.+)'
+            regex: "(.+):(.+)"
             target_label: __address__
-            replacement: '${1}:9100'
+            replacement: "${1}:9100"
           - source_labels: [__meta_kubernetes_node_name]
             target_label: node
           - source_labels: [__meta_kubernetes_node_name]
@@ -65,16 +65,16 @@ kube-state-metrics:
 
 # Component scrapers - adjust for Talos
 kubeControllerManager:
-  enabled: false  # Talos runs these differently
+  enabled: false # Talos runs these differently
 
 kubeScheduler:
-  enabled: false  # Talos runs these differently
+  enabled: false # Talos runs these differently
 
 kubeProxy:
-  enabled: false  # Talos uses kube-proxy but metrics may not be exposed
+  enabled: false # Talos uses kube-proxy but metrics may not be exposed
 
 kubeEtcd:
-  enabled: false  # Can be enabled if etcd metrics are exposed
+  enabled: false # Can be enabled if etcd metrics are exposed
 
 # Kubelet metrics - should work on Talos
 kubelet:

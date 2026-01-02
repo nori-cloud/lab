@@ -104,3 +104,10 @@ module "system" {
 
   namespace = "system"
 }
+
+module "monitoring" {
+  depends_on = [module.networking]
+  source     = "./monitoring"
+
+  namespace = "monitoring"
+}

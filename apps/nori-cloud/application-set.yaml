@@ -13,7 +13,6 @@ spec:
           - app: infisical-secretstore
           - app: postgres
           - app: actual-budget
-          - app: monitoring
   template:
     metadata:
       name: "{{app}}"
