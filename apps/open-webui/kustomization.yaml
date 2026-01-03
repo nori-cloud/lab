@@ -1,0 +1,7 @@
+resources:
+  - application.yaml
+  - external-secret.yaml
+  - ingress-route.yaml
+  - searxng-configmap.yaml
+  - searxng-deployment.yaml
+  - searxng-service.yaml

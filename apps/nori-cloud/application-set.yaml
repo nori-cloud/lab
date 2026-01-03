@@ -16,6 +16,7 @@ spec:
           - app: actual-budget
           - app: kokoro
           - app: whisper
+          - app: open-webui
   template:
     metadata:
       name: "{{app}}"
