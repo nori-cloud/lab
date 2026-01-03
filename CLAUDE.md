@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-Infrastructure-as-Code repository for **nori-cloud** managing homelab k3s infrastructure using OpenTofu, Kubernetes, Helm, and Argo CD.
+Infrastructure-as-Code repository for **nori-cloud** managing homelab Talos Linux infrastructure using OpenTofu, Kubernetes, Helm, and Argo CD.
 
 **Note**: The `/cloud/` directory contains historical reference code only and is not actively deployed.
 
@@ -62,7 +62,7 @@ tofu plan -target=module.cluster -out=.plan/cluster.tfplan
 tofu apply .plan/cluster.tfplan
 ```
 
-The Proxmox provider is currently **commented out** in `/home/main.tf` - homelab runs on existing k3s cluster.
+The Proxmox provider is currently **commented out** in `/home/main.tf` - homelab runs on existing Talos Linux cluster.
 
 ### Working with Applications
 

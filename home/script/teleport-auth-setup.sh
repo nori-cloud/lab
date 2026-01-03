@@ -16,7 +16,7 @@ if [ -z "$TELEPORT_OAUTH_CLIENT_ID" ] || [ -z "$TELEPORT_OAUTH_CLIENT_SECRET" ];
 fi
 
 TEMP_CONNECTOR_FILE=/tmp/github-connector.yaml
-ROLE_FILE=./script/teleport-k3s-admin-role.yaml
+ROLE_FILE=./script/teleport-talos-admin-role.yaml
 
 # if no access to cluster via tsh
 # kubectl exec -n system -i deployment/teleport-auth -- tctl
@@ -28,7 +28,7 @@ echo "Configuring github sso on teleport cluster..."
 kubectl exec -n system -i deployment/teleport-auth -- tctl sso configure github \
   --id $TELEPORT_OAUTH_CLIENT_ID \
   --secret $TELEPORT_OAUTH_CLIENT_SECRET \
-  --teams-to-roles=nori-cloud,teleport-admins,access,editor,k3s-admin \
+  --teams-to-roles=nori-cloud,teleport-admins,access,editor,talos-admin \
   > $TEMP_CONNECTOR_FILE
 
 cat $TEMP_CONNECTOR_FILE | kubectl exec -n system -i deployment/teleport-auth -- tctl create -f
