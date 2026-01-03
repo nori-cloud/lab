@@ -1,44 +1,39 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: speaches
+  name: kokoro
   namespace: nori-cloud
 spec:
-  serviceName: speaches
+  serviceName: kokoro
   replicas: 1
   selector:
     matchLabels:
-      app: speaches
+      app: kokoro
   template:
     metadata:
       labels:
-        app: speaches
+        app: kokoro
     spec:
       containers:
-        - name: speaches
-          image: ghcr.io/speaches-ai/speaches:latest-cpu
-          env:
-            - name: LOOPBACK_HOST_URL
-              value: "http://localhost:8000"
-            - name: PRELOAD_MODELS
-              value: '["Systran/faster-distil-whisper-small.en", "speaches-ai/Kokoro-82M-v1.0-ONNX"]'
+        - name: kokoro
+          image: remsky/kokoro-fastapi-cpu:latest
           ports:
-            - containerPort: 8000
+            - containerPort: 8880
               name: http
           volumeMounts:
-            - name: hf-cache
-              mountPath: /home/ubuntu/.cache/huggingface/hub
+            - name: model-cache
+              mountPath: /app/api/src/models
           startupProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: 8880
             initialDelaySeconds: 10
             periodSeconds: 10
-            failureThreshold: 60  # 10 minutes for model download
+            failureThreshold: 60
           readinessProbe:
             httpGet:
               path: /health
-              port: 8000
+              port: 8880
             periodSeconds: 10
           resources:
             requests:
@@ -49,11 +44,11 @@ spec:
               cpu: "2000m"
   volumeClaimTemplates:
     - metadata:
-        name: hf-cache
+        name: model-cache
       spec:
         accessModes:
           - ReadWriteOnce
         storageClassName: freenas-nfs
         resources:
           requests:
-            storage: 20Gi
+            storage: 10Gi

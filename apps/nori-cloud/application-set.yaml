@@ -14,7 +14,8 @@ spec:
           - app: infisical-secretstore
           - app: postgres
           - app: actual-budget
-          - app: speaches
+          - app: kokoro
+          - app: whisper
   template:
     metadata:
       name: "{{app}}"
