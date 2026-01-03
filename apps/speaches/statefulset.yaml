@@ -20,12 +20,26 @@ spec:
           env:
             - name: LOOPBACK_HOST_URL
               value: "http://localhost:8000"
+            - name: PRELOAD_MODELS
+              value: '["Systran/faster-distil-whisper-small.en", "speaches-ai/Kokoro-82M-v1.0-ONNX"]'
           ports:
             - containerPort: 8000
               name: http
           volumeMounts:
             - name: hf-cache
               mountPath: /home/ubuntu/.cache/huggingface/hub
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 60  # 10 minutes for model download
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 10
           resources:
             requests:
               memory: "512Mi"
