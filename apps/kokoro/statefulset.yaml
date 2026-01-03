@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kokoro
-          image: remsky/kokoro-fastapi-cpu:latest
+          image: ghcr.io/remsky/kokoro-fastapi-cpu:v0.2.4-master
           ports:
             - containerPort: 8880
               name: http
