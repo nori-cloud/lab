@@ -32,6 +32,44 @@ server:
         ingressClassName: traefik
         extraHosts:
             - name: argocd.norriswu.me
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+
+repoServer:
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+
+controller:
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+
+dex:
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+
+redis:
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
+
+notifications:
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
 
 applicationSet:
     allowAnyNamespace: true
+    metrics:
+        enabled: true
+        serviceMonitor:
+            enabled: true
