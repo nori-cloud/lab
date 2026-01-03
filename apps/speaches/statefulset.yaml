@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: speaches
+  namespace: nori-cloud
+spec:
+  serviceName: speaches
+  replicas: 1
+  selector:
+    matchLabels:
+      app: speaches
+  template:
+    metadata:
+      labels:
+        app: speaches
+    spec:
+      containers:
+        - name: speaches
+          image: ghcr.io/speaches-ai/speaches:latest-cpu
+          ports:
+            - containerPort: 8000
+              name: http
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /home/ubuntu/.cache/huggingface/hub
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+  volumeClaimTemplates:
+    - metadata:
+        name: hf-cache
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: freenas-nfs
+        resources:
+          requests:
+            storage: 20Gi
