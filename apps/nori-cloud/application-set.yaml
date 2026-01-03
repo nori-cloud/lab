@@ -21,7 +21,7 @@ spec:
     metadata:
       name: "{{app}}"
     spec:
-      project: nori-cloud
+      project: default
       source:
         path: "apps/{{app}}"
         repoURL: "https://github.com/nori-cloud/lab.git"
