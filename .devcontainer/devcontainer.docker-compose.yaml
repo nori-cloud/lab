@@ -4,6 +4,8 @@ services:
       context: ..
       dockerfile: .devcontainer/Dockerfile
     command: sleep infinity
+    env_file:
+      - .env
     volumes:
       - ../..:/workspace:cached
       - workspace_config_277549:/home/node/

@@ -1,0 +1,24 @@
+{
+	"mcpServers": {
+		"grafana": {
+			"command": "docker",
+			"args": [
+				"run",
+				"--rm",
+				"-i",
+				"--dns",
+				"10.0.0.1",
+				"-e",
+				"GRAFANA_URL",
+				"-e",
+				"GRAFANA_SERVICE_ACCOUNT_TOKEN",
+				"mcp/grafana",
+				"-t",
+				"stdio"
+			],
+			"env": {
+				"GRAFANA_URL": "https://grafana.home.norriswu.me"
+			}
+		}
+	}
+}
