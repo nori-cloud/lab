@@ -8,7 +8,7 @@ Whole bunch of system requirements to run stuffs
   - [Tips](#tips)
 - [Proxmox VE](#proxmox-ve)
 - [pi-hole](#pi-hole)
-- [k3s](#k3s)
+- [Talos Linux](#talos-linux)
 
 ## [opnsense](https://docs.opnsense.org/manual/hardware.html)
 
@@ -72,18 +72,17 @@ For production servers, high quality server equipment is needed. Proxmox VE supp
 | Storage | 2GB min, 4Gb recommended      |
 | Network | static IP or DHCP reservation |
 
-## [k3s](https://docs.k3s.io/installation/requirements)
+## [Talos Linux](https://www.talos.dev/latest/introduction/system-requirements/)
 
 [back to top](#system-requirements)
 
-K3s is available for the following architectures: `x86_64, armhf, arm64/aarch64`
+Talos Linux is available for the following architectures: `x86_64 (amd64), arm64 (aarch64)`
 
-|         | Server                                       | Agent  |
-| ------- | -------------------------------------------- | ------ |
-| CPU     | 2 cores                                      | 1 core |
-| RAM     | 2GB                                          | 512 MB |
-| Storage | SSD, no SD Cards, eMMC, etcd write intensive |
-| DB      | best external                                |
+|         | Control Plane                                | Worker Node |
+| ------- | -------------------------------------------- | ----------- |
+| CPU     | 2 cores                                      | 1 core      |
+| RAM     | 2GB                                          | 1GB         |
+| Storage | 10GB minimum (prefer SSD for etcd)           | 10GB        |
 
 ## etcd hardware requirements
 

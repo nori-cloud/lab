@@ -2,7 +2,7 @@
 kind: role
 version: v7
 metadata:
-  name: k3s-admin
+  name: talos-admin
 spec:
   allow:
     logins: ["{{external.logins}}"]
