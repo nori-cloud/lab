@@ -17,6 +17,9 @@ spec:
       containers:
         - name: speaches
           image: ghcr.io/speaches-ai/speaches:latest-cpu
+          env:
+            - name: LOOPBACK_HOST_URL
+              value: "http://localhost:8000"
           ports:
             - containerPort: 8000
               name: http
