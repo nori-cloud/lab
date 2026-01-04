@@ -17,6 +17,7 @@ spec:
           - app: kokoro
           - app: whisper
           - app: open-webui
+          - app: story
   template:
     metadata:
       name: "{{app}}"
