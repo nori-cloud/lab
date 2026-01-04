@@ -36,36 +36,48 @@ server:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
 
 repoServer:
     metrics:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
 
 controller:
     metrics:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
 
 dex:
     metrics:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
 
 redis:
     metrics:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
 
 notifications:
     metrics:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
 
 applicationSet:
     allowAnyNamespace: true
@@ -73,3 +85,5 @@ applicationSet:
         enabled: true
         serviceMonitor:
             enabled: true
+            additionalLabels:
+                release: kube-prometheus-stack
