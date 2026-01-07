@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: norriswu-me-staging-wildcard
+  namespace: networking
+spec:
+  secretName: norriswu-me-staging-wildcard-tls
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+  dnsNames:
+    - 'staging.norriswu.me'
+    - '*.staging.norriswu.me'

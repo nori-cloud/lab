@@ -1,0 +1,18 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: story-staging
+  namespace: nori-cloud
+  labels:
+    app: story-staging
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`story.staging.norriswu.me`)
+      kind: Rule
+      services:
+        - name: story-staging
+          port: 3000
+  tls:
+    secretName: norriswu-me-staging-wildcard-tls
