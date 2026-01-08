@@ -14,7 +14,7 @@ spec:
         app: story
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/story:16ccb1f
+        - image: ghcr.io/nori-cloud/story:837bc77
           name: story
           ports:
             - containerPort: 3000
