@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: affine
+  namespace: nori-cloud
+  labels:
+    app: affine
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`affine.norriswu.me`)
+      kind: Rule
+      services:
+        - name: affine
+          port: 3000
