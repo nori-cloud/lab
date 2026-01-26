@@ -13,4 +13,4 @@ spec:
       kind: Rule
       services:
         - name: affine
-          port: 3000
+          port: 3010

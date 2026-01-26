@@ -1,5 +1,8 @@
 resources:
+  - secret.yaml
   - pvc.yaml
+  - redis.yaml
+  - postgres.yaml
   - deployment.yaml
   - service.yaml
   - ingress-route.yaml

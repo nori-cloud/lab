@@ -16,23 +16,70 @@ spec:
       labels:
         app: affine
     spec:
+      initContainers:
+        - name: migration
+          image: ghcr.io/toeverything/affine:stable
+          command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
+          env:
+            - name: REDIS_SERVER_HOST
+              value: "affine-redis"
+            - name: DATABASE_URL
+              value: "postgresql://affine:$(DB_PASSWORD)@affine-postgres:5432/affine"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: affine-secret
+                  key: DB_PASSWORD
+            - name: AFFINE_INDEXER_ENABLED
+              value: "false"
+          volumeMounts:
+            - name: storage
+              mountPath: /root/.affine/storage
+            - name: config
+              mountPath: /root/.affine/config
       containers:
         - name: affine
-          image: ghcr.io/toeverything/affine-self-hosted:latest
+          image: ghcr.io/toeverything/affine:stable
           ports:
-            - containerPort: 3000
+            - containerPort: 3010
               name: http
+          env:
+            - name: REDIS_SERVER_HOST
+              value: "affine-redis"
+            - name: DATABASE_URL
+              value: "postgresql://affine:$(DB_PASSWORD)@affine-postgres:5432/affine"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: affine-secret
+                  key: DB_PASSWORD
+            - name: AFFINE_INDEXER_ENABLED
+              value: "false"
+            - name: AFFINE_SERVER_HTTPS
+              value: "true"
+            - name: AFFINE_SERVER_EXTERNAL_URL
+              value: "https://affine.norriswu.me"
           volumeMounts:
-            - name: data
-              mountPath: /app/data
+            - name: storage
+              mountPath: /root/.affine/storage
+            - name: config
+              mountPath: /root/.affine/config
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "100m"
+              memory: "512Mi"
+              cpu: "200m"
             limits:
               memory: "2Gi"
               cpu: "1000m"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3010
+            initialDelaySeconds: 30
+            periodSeconds: 10
       volumes:
-        - name: data
+        - name: storage
           persistentVolumeClaim:
             claimName: affine-data
+        - name: config
+          emptyDir: {}
