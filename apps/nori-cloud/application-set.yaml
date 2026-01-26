@@ -19,6 +19,7 @@ spec:
           - app: open-webui
           - app: story
           - app: affine
+          - app: to-speckit
   template:
     metadata:
       name: "{{app}}"
