@@ -20,16 +20,10 @@ spec:
         - name: migration
           image: ghcr.io/toeverything/affine:stable
           command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
+          envFrom:
+            - secretRef:
+                name: affine-secret
           env:
-            - name: REDIS_SERVER_HOST
-              value: "affine-redis"
-            - name: DATABASE_URL
-              value: "postgresql://affine:$(DB_PASSWORD)@affine-postgres:5432/affine"
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: affine-secret
-                  key: DB_PASSWORD
             - name: AFFINE_INDEXER_ENABLED
               value: "false"
           volumeMounts:
@@ -43,22 +37,12 @@ spec:
           ports:
             - containerPort: 3010
               name: http
+          envFrom:
+            - secretRef:
+                name: affine-secret
           env:
-            - name: REDIS_SERVER_HOST
-              value: "affine-redis"
-            - name: DATABASE_URL
-              value: "postgresql://affine:$(DB_PASSWORD)@affine-postgres:5432/affine"
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: affine-secret
-                  key: DB_PASSWORD
             - name: AFFINE_INDEXER_ENABLED
               value: "false"
-            - name: AFFINE_SERVER_HTTPS
-              value: "true"
-            - name: AFFINE_SERVER_EXTERNAL_URL
-              value: "https://affine.norriswu.me"
           volumeMounts:
             - name: storage
               mountPath: /root/.affine/storage
