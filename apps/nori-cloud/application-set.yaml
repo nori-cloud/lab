@@ -20,6 +20,7 @@ spec:
           - app: story
           - app: affine
           - app: to-speckit
+          - app: visa
   template:
     metadata:
       name: "{{app}}"
