@@ -21,6 +21,7 @@ spec:
           - app: affine
           - app: to-speckit
           - app: visa
+          - app: ui
   template:
     metadata:
       name: "{{app}}"

@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: ui
+  namespace: nori-cloud
+  labels:
+    app: ui
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`ui.norriswu.me`)
+      kind: Rule
+      services:
+        - name: ui
+          port: 8080
