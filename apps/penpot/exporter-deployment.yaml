@@ -18,6 +18,9 @@ spec:
       containers:
         - name: exporter
           image: penpotapp/exporter:latest
+          ports:
+            - containerPort: 6061
+              name: http
           env:
             - name: PENPOT_PUBLIC_URI
               value: "http://penpot-frontend:8080"
