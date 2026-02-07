@@ -15,6 +15,7 @@ spec:
           - app: pgadmin
           - app: postgres
           - app: valkey
+          - app: penpot
           - app: actual-budget
           - app: kokoro
           - app: whisper
