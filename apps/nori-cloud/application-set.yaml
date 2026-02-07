@@ -12,6 +12,7 @@ spec:
           - app: ghcr-credentials
           - app: guppy
           - app: infisical-secretstore
+          - app: pgadmin
           - app: postgres
           - app: actual-budget
           - app: kokoro
