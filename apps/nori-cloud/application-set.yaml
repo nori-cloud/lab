@@ -14,6 +14,7 @@ spec:
           - app: infisical-secretstore
           - app: pgadmin
           - app: postgres
+          - app: valkey
           - app: actual-budget
           - app: kokoro
           - app: whisper
