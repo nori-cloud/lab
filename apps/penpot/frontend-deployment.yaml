@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-frontend
+  namespace: nori-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: penpot
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: penpot
+        component: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: penpotapp/frontend:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: PENPOT_FLAGS
+              value: "disable-email-verification disable-secure-session-cookies"
+          volumeMounts:
+            - name: assets
+              mountPath: /opt/data/assets
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+      volumes:
+        - name: assets
+          persistentVolumeClaim:
+            claimName: penpot-assets

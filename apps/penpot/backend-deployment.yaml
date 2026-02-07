@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: penpot-backend
+  namespace: nori-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: penpot
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: penpot
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: penpotapp/backend:latest
+          ports:
+            - containerPort: 6060
+              name: http
+          env:
+            - name: PENPOT_FLAGS
+              value: "disable-email-verification disable-secure-session-cookies enable-prepl-server"
+            - name: PENPOT_PUBLIC_URI
+              value: "https://penpot.norriswu.me"
+            - name: PENPOT_DATABASE_URI
+              value: "postgresql://postgres.nori-cloud/penpot"
+            - name: PENPOT_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secret
+                  key: PENPOT_DATABASE_USERNAME
+            - name: PENPOT_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secret
+                  key: PENPOT_DATABASE_PASSWORD
+            - name: PENPOT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: penpot-secret
+                  key: PENPOT_SECRET_KEY
+            - name: PENPOT_REDIS_URI
+              value: "redis://valkey.nori-cloud:6379/0"
+            - name: PENPOT_OBJECTS_STORAGE_BACKEND
+              value: "fs"
+            - name: PENPOT_OBJECTS_STORAGE_FS_DIRECTORY
+              value: "/opt/data/assets"
+            - name: PENPOT_TELEMETRY_ENABLED
+              value: "false"
+          volumeMounts:
+            - name: assets
+              mountPath: /opt/data/assets
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      volumes:
+        - name: assets
+          persistentVolumeClaim:
+            claimName: penpot-assets
