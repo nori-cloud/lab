@@ -27,3 +27,18 @@ spec:
     - port: 6060
       targetPort: 6060
       name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: penpot-exporter
+  namespace: nori-cloud
+spec:
+  type: ClusterIP
+  selector:
+    app: penpot
+    component: exporter
+  ports:
+    - port: 6061
+      targetPort: 6061
+      name: http
