@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: outpost
+  namespace: nori-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: outpost
+  template:
+    metadata:
+      labels:
+        app: outpost
+    spec:
+      containers:
+        - image: ghcr.io/nori-cloud/outpost:02cba2a
+          name: outpost
+          ports:
+            - containerPort: 3000

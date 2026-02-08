@@ -24,6 +24,7 @@ spec:
           - app: affine
           - app: to-speckit
           - app: visa
+          - app: outpost
           - app: ui
   template:
     metadata:
