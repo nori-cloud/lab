@@ -1,0 +1,16 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: outpost
+  namespace: nori-cloud
+  labels:
+    app: outpost
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`outpost.norriswu.me`)
+      kind: Rule
+      services:
+        - name: outpost
+          port: 3000
