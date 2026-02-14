@@ -14,7 +14,7 @@ spec:
         app: ui
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/ui:2616701
+        - image: ghcr.io/nori-cloud/ui:824920d
           name: ui
           ports:
             - containerPort: 8080
