@@ -14,7 +14,7 @@ spec:
         app: outpost
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/outpost:824920d
+        - image: ghcr.io/nori-cloud/outpost:ce8a36f
           name: outpost
           ports:
             - containerPort: 3000
