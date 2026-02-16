@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: openclaw-data
+  namespace: nori-cloud
+  labels:
+    app: openclaw
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: freenas-nfs
+  resources:
+    requests:
+      storage: 10Gi
