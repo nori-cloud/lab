@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openclaw
+  namespace: nori-cloud
+  labels:
+    app: openclaw
+spec:
+  type: ClusterIP
+  selector:
+    app: openclaw
+  ports:
+    - port: 18789
+      targetPort: 18789
+      name: http

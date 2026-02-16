@@ -26,6 +26,7 @@ spec:
           - app: visa
           - app: outpost
           - app: ui
+          - app: openclaw
   template:
     metadata:
       name: "{{app}}"

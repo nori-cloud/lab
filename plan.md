@@ -13,50 +13,58 @@ OpenClaw is a self-hosted autonomous AI agent / personal assistant. It provides 
 
 ## Architecture Decision
 
-OpenClaw will be deployed as a **StatefulSet** (stateful, single-replica) following the same patterns as `open-webui` and `affine`. It will:
+OpenClaw will be deployed as a **Deployment** with a separate **PVC** for persistent storage. It will:
 
-- Reuse the existing **PostgreSQL** instance in the `nori-cloud` namespace
+- Use pre-existing **PostgreSQL** database (already provisioned)
 - Use **Infisical** (via ExternalSecret) for secret management (API keys, DB credentials)
 - Expose the web UI via **Traefik IngressRoute** at `openclaw.norriswu.me`
-- Use `freenas-nfs` storage for persistent data
+- Use `freenas-nfs` storage class for the PVC
 
 ## Files to Create
 
-All files go in `/home/user/lab/apps/openclaw/`:
+All files go in `apps/openclaw/`:
 
 ### 1. `kustomization.yaml`
 Standard Kustomize resource list:
 ```yaml
 resources:
   - external-secret.yaml
-  - statefulset.yaml
+  - pvc.yaml
+  - deployment.yaml
   - service.yaml
   - ingress-route.yaml
 ```
 
-### 2. `statefulset.yaml`
-StatefulSet with:
+### 2. `pvc.yaml`
+PersistentVolumeClaim:
+- Name: `openclaw-data`
+- StorageClass: `freenas-nfs`
+- AccessMode: `ReadWriteOnce`
+- Size: 10Gi
+
+### 3. `deployment.yaml`
+Deployment with:
 - Image: `ghcr.io/openclaw/openclaw:main`
+- Replicas: 1
 - Container port: 18789 (gateway)
 - Environment variables:
   - `OPENCLAW_GATEWAY_PORT=18789`
-  - `DATABASE_URL` from secret (pointing to existing postgres)
+  - `DATABASE_URL` from secret (pointing to pre-existing postgres)
 - `envFrom` referencing `openclaw-secret`
-- Volume mount: `/home/node/.openclaw` for persistent config/memory
-- `volumeClaimTemplate`: 10Gi on `freenas-nfs`
+- Volume mount: `/home/node/.openclaw` using `openclaw-data` PVC
 - Startup probe on port 18789
-- Resource requests/limits (medium-sized: 256Mi/2Gi memory, 100m/1000m CPU)
+- Resource requests/limits (256Mi/2Gi memory, 100m/1000m CPU)
 
-### 3. `service.yaml`
+### 4. `service.yaml`
 ClusterIP service exposing port 18789 (gateway web UI).
 
-### 4. `ingress-route.yaml`
+### 5. `ingress-route.yaml`
 Traefik IngressRoute:
 - Host: `openclaw.norriswu.me`
 - EntryPoint: `websecure`
 - Routes to `openclaw` service on port 18789
 
-### 5. `external-secret.yaml`
+### 6. `external-secret.yaml`
 ExternalSecret pulling from Infisical (`infisical-nori-cloud` SecretStore):
 - `ANTHROPIC_API_KEY` - for Claude models
 - `OPENAI_API_KEY` - for OpenAI models (optional)
@@ -67,7 +75,7 @@ Secrets will need to be populated in Infisical under `/openclaw/` path.
 
 ## File to Modify
 
-### 6. `apps/nori-cloud/application-set.yaml`
+### 7. `apps/nori-cloud/application-set.yaml`
 Add `- app: openclaw` to the list generator elements.
 
 ## Post-Deployment Steps (Manual)
@@ -75,10 +83,9 @@ Add `- app: openclaw` to the list generator elements.
 1. **Populate secrets in Infisical** under the `/openclaw/` path:
    - `OPENCLAW_ANTHROPIC_API_KEY`
    - `OPENCLAW_OPENAI_API_KEY` (optional)
-   - `OPENCLAW_DATABASE_URL` (e.g., `postgresql://user:pass@postgres.nori-cloud:5432/openclaw`)
-2. **Create the `openclaw` database** in the existing PostgreSQL instance
-3. **Verify Argo CD sync**: `kubectl get application openclaw -n argo-cd`
-4. **Access**: Navigate to `https://openclaw.norriswu.me`
+   - `OPENCLAW_DATABASE_URL` (connection string to pre-existing postgres)
+2. **Verify Argo CD sync**: `kubectl get application openclaw -n argo-cd`
+3. **Access**: Navigate to `https://openclaw.norriswu.me`
 
 ## Security Considerations
 
