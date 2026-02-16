@@ -32,8 +32,8 @@ spec:
             - name: data
               mountPath: /home/node/.openclaw
             - name: config
-              mountPath: /home/node/.openclaw/config.json
-              subPath: config.json
+              mountPath: /home/node/.openclaw/openclaw.json
+              subPath: openclaw.json
           resources:
             requests:
               memory: "256Mi"
