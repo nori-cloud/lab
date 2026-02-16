@@ -14,3 +14,5 @@ spec:
       services:
         - name: openclaw
           port: 18789
+      middlewares:
+        - name: authentik

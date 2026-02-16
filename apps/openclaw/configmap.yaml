@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openclaw-config
+  namespace: nori-cloud
+  labels:
+    app: openclaw
+data:
+  config.json: |
+    {
+      "gateway": {
+        "auth": {
+          "mode": "trusted-proxy",
+          "trustedProxy": {
+            "userHeader": "X-authentik-email"
+          }
+        },
+        "trustedProxies": ["10.0.0.0/8"]
+      }
+    }
