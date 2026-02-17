@@ -9,13 +9,6 @@ data:
   openclaw.json: |
     {
       "gateway": {
-        "bind": "lan",
-        "auth": {
-          "mode": "trusted-proxy",
-          "trustedProxy": {
-            "userHeader": "X-forwarded-user"
-          }
-        },
-        "trustedProxies": ["10.0.0.0/8"]
+        "bind": "lan"
       }
     }
