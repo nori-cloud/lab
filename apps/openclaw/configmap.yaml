@@ -16,6 +16,6 @@ data:
             "userHeader": "X-forwarded-user"
           }
         },
-        "trustedProxies": ["10.107.93.196"]
+        "trustedProxies": ["10.0.0.0/8"]
       }
     }
