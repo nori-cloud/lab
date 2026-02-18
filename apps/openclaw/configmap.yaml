@@ -13,7 +13,7 @@ data:
         "auth": {
           "mode": "trusted-proxy",
           "trustedProxy": {
-            "userHeader": "X-forwarded-user"
+            "userHeader": "X-authentik-email"
           }
         },
         "trustedProxies": ["10.0.0.0/8"]
