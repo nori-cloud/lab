@@ -27,6 +27,7 @@ spec:
           - app: outpost
           - app: ui
           - app: openclaw
+          - app: whoami
   template:
     metadata:
       name: "{{app}}"
