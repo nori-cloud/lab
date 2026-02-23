@@ -9,7 +9,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`outpost.norriswu.me`)
+    - match: Host(`outpost.norriswu.me`) || Host(`norriswu.me`)
       kind: Rule
       services:
         - name: outpost
