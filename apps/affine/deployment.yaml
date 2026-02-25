@@ -18,7 +18,7 @@ spec:
     spec:
       initContainers:
         - name: migration
-          image: ghcr.io/toeverything/affine:stable
+          image: ghcr.io/toeverything/affine:0.26.3
           command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
           envFrom:
             - secretRef:
@@ -33,7 +33,7 @@ spec:
               mountPath: /root/.affine/config
       containers:
         - name: affine
-          image: ghcr.io/toeverything/affine:stable
+          image: ghcr.io/toeverything/affine:0.26.3
           ports:
             - containerPort: 3010
               name: http
