@@ -28,6 +28,7 @@ spec:
           - app: ui
           - app: openclaw
           - app: whoami
+          - app: infisical
   template:
     metadata:
       name: "{{app}}"
