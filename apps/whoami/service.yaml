@@ -6,6 +6,8 @@ metadata:
   labels:
     app: whoami
 spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
   selector:
     app: whoami
   ports:
