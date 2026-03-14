@@ -2,3 +2,4 @@ resources:
   - external-secret.yaml
   - statefulset.yaml
   - service.yaml
+  - tailscale-service.yaml
