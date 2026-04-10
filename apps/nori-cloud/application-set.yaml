@@ -29,6 +29,8 @@ spec:
           - app: openclaw
           - app: whoami
           - app: infisical
+          - app: koukou
+          - app: boubou
   template:
     metadata:
       name: "{{app}}"
