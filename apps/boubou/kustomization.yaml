@@ -1,5 +1,4 @@
 resources:
   - deployment.yaml
   - service.yaml
-  - ingress-route.yaml
   - external-secret.yaml
