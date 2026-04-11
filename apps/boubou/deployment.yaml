@@ -14,7 +14,7 @@ spec:
         app: boubou
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/boubou:aef04db
+        - image: ghcr.io/nori-cloud/boubou:9108334
           name: boubou
           ports:
             - containerPort: 3000
