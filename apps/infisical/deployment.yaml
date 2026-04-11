@@ -1,70 +1,70 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: infisical
-  namespace: nori-cloud
-  labels:
-    app: infisical
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: infisical
-  template:
-    metadata:
-      labels:
+    name: infisical
+    namespace: nori-cloud
+    labels:
         app: infisical
-    spec:
-      containers:
-        - name: infisical
-          image: infisical/infisical:latest-postgres
-          ports:
-            - containerPort: 8080
-              name: http
-          env:
-            - name: HOST
-              value: "0.0.0.0"
-            - name: REDIS_URL
-              value: redis://valkey:6379
-            - name: SITE_URL
-              value: https://infisical.norriswu.me
-            - name: DB_CONNECTION_URI
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: DB_CONNECTION_URI
-            - name: AUTH_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: AUTH_SECRET
-            - name: ENCRYPTION_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: ENCRYPTION_KEY
-            - name: SMTP_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: SMTP_HOST
-            - name: SMTP_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: SMTP_PORT
-            - name: SMTP_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: SMTP_USERNAME
-            - name: SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: SMTP_PASSWORD
-            - name: SMTP_FROM_ADDRESS
-              valueFrom:
-                secretKeyRef:
-                  name: infisical-secret
-                  key: SMTP_FROM_ADDRESS
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: infisical
+    template:
+        metadata:
+            labels:
+                app: infisical
+        spec:
+            containers:
+                - name: infisical
+                  image: infisical/infisical:v0.159.9
+                  ports:
+                      - containerPort: 8080
+                        name: http
+                  env:
+                      - name: HOST
+                        value: '0.0.0.0'
+                      - name: REDIS_URL
+                        value: redis://valkey:6379
+                      - name: SITE_URL
+                        value: https://infisical.hoki-sole.ts.net
+                      - name: DB_CONNECTION_URI
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: DB_CONNECTION_URI
+                      - name: AUTH_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: AUTH_SECRET
+                      - name: ENCRYPTION_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: ENCRYPTION_KEY
+                      - name: SMTP_HOST
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: SMTP_HOST
+                      - name: SMTP_PORT
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: SMTP_PORT
+                      - name: SMTP_USERNAME
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: SMTP_USERNAME
+                      - name: SMTP_PASSWORD
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: SMTP_PASSWORD
+                      - name: SMTP_FROM_ADDRESS
+                        valueFrom:
+                            secretKeyRef:
+                                name: infisical-secret
+                                key: SMTP_FROM_ADDRESS
