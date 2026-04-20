@@ -14,7 +14,7 @@ spec:
         app: koukou
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/koukou:aef04db
+        - image: ghcr.io/nori-cloud/koukou:c6d1ef2
           name: koukou
           ports:
             - containerPort: 3000
