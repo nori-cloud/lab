@@ -1,8 +1,0 @@
-resources:
-  - external-secret.yaml
-  - statefulset.yaml
-  - service.yaml
-  - ingress-route.yaml
-  - searxng-configmap.yaml
-  - searxng-deployment.yaml
-  - searxng-service.yaml
