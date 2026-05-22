@@ -16,5 +16,8 @@ spec:
       containers:
         - image: ghcr.io/nori-cloud/outpost:2380a8e
           name: outpost
+          envFrom:
+            - secretRef:
+                name: outpost-secret
           ports:
             - containerPort: 3000
