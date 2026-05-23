@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: story
+    namespace: nori-cloud
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: story
+    template:
+        metadata:
+            labels:
+                app: story
+        spec:
+            containers:
+                - image: ghcr.io/nori-cloud/story:7a6a481
+                  name: story
+                  ports:
+                      - containerPort: 3000
+                  env:
+                      - name: NODE_ENV
+                        value: production
+                  envFrom:
+                      - secretRef:
+                            name: story-secret
