@@ -1,42 +1,41 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: nori-cloud-appset
-  namespace: argo-cd
+    name: nori-cloud-appset
+    namespace: argo-cd
 spec:
-  generators:
-    - list:
-        elements:
-          - app: cloudflare-tunnel
-          - app: ghcr-credentials
-          - app: guppy
-          - app: infisical-secretstore
-          - app: pgadmin
-          - app: postgres
-          - app: valkey
-          - app: actual-budget
-          - app: kokoro
-          - app: whisper
-          - app: affine
-          - app: outpost
-          - app: ui
-          - app: whoami
-          - app: infisical
-          - app: koukou
-          - app: boubou
-  template:
-    metadata:
-      name: "{{app}}"
-    spec:
-      project: default
-      source:
-        path: "apps/{{app}}"
-        repoURL: "https://github.com/nori-cloud/lab.git"
-        targetRevision: HEAD
-      destination:
-        namespace: nori-cloud
-        server: "https://kubernetes.default.svc"
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
+    generators:
+        - list:
+              elements:
+                  - app: cloudflare-tunnel
+                  - app: ghcr-credentials
+                  - app: guppy
+                  - app: infisical-secretstore
+                  - app: pgadmin
+                  - app: postgres
+                  - app: valkey
+                  - app: actual-budget
+                  - app: kokoro
+                  - app: whisper
+                  - app: affine
+                  - app: outpost
+                  - app: ui
+                  - app: whoami
+                  - app: koukou
+                  - app: boubou
+    template:
+        metadata:
+            name: '{{app}}'
+        spec:
+            project: default
+            source:
+                path: 'apps/{{app}}'
+                repoURL: 'https://github.com/nori-cloud/lab.git'
+                targetRevision: HEAD
+            destination:
+                namespace: nori-cloud
+                server: 'https://kubernetes.default.svc'
+            syncPolicy:
+                automated:
+                    prune: true
+                    selfHeal: true
