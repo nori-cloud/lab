@@ -3,8 +3,13 @@ kind: Service
 metadata:
   name: pgadmin
   namespace: nori-cloud
+  labels:
+    app: pgadmin
+  annotations:
+    tailscale.com/hostname: pgadmin
 spec:
-  type: ClusterIP
+  type: LoadBalancer
+  loadBalancerClass: tailscale
   selector:
     app: pgadmin
   ports:
