@@ -5,6 +5,8 @@ metadata:
   namespace: nori-cloud
 data:
   nats.conf: |
+    server_name: $POD_NAME
+
     jetstream {
       store_dir: /data
     }

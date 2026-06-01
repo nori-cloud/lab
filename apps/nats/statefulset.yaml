@@ -22,6 +22,11 @@ spec:
           args:
             - --config
             - /etc/nats/nats.conf
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           ports:
             - containerPort: 4222
               name: client
