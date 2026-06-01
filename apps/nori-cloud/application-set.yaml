@@ -23,6 +23,7 @@ spec:
                   - app: whoami
                   - app: koukou
                   - app: boubou
+                  - app: uptime-kuma
     template:
         metadata:
             name: '{{app}}'
