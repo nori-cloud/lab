@@ -2,4 +2,3 @@ resources:
   - configmap.yaml
   - statefulset.yaml
   - service.yaml
-  - service-headless.yaml
