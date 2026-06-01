@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nats-config
+  namespace: nori-cloud
+data:
+  nats.conf: |
+    jetstream {
+      store_dir: /data
+    }
+
+    http_port: 8222
+
+    cluster {
+      name: nats
+      listen: 0.0.0.0:6222
+      routes: [
+        nats-route://nats-0.nats-headless:6222
+        nats-route://nats-1.nats-headless:6222
+        nats-route://nats-2.nats-headless:6222
+      ]
+    }
