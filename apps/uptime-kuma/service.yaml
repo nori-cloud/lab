@@ -5,6 +5,8 @@ metadata:
   namespace: nori-cloud
   labels:
     app: uptime-kuma
+  annotations:
+    tailscale.com/hostname: uptime
 spec:
   type: LoadBalancer
   loadBalancerClass: tailscale
