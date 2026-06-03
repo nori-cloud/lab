@@ -11,3 +11,20 @@ spec:
     - port: 8000
       targetPort: 8000
       name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whisper-tailscale
+  namespace: nori-cloud
+  annotations:
+    tailscale.com/hostname: whisper
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector:
+    app: whisper
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http

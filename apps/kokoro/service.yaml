@@ -11,3 +11,20 @@ spec:
     - port: 8880
       targetPort: 8880
       name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kokoro-tailscale
+  namespace: nori-cloud
+  annotations:
+    tailscale.com/hostname: kokoro
+spec:
+  type: LoadBalancer
+  loadBalancerClass: tailscale
+  selector:
+    app: kokoro
+  ports:
+    - port: 8880
+      targetPort: 8880
+      name: http
