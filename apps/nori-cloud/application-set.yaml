@@ -17,6 +17,7 @@ spec:
                   - app: actual-budget
                   - app: kokoro
                   - app: whisper
+                  - app: localai
                   - app: affine
                   - app: outpost
                   - app: ui
