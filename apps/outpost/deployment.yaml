@@ -14,7 +14,7 @@ spec:
         app: outpost
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/outpost:087ea3a
+        - image: ghcr.io/nori-cloud/outpost:5fd012d
           name: outpost
           envFrom:
             - secretRef:
