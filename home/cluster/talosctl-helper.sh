@@ -7,6 +7,11 @@ CONTROL_PLANE_IP=10.0.0.110
 DISK_NAME=sda
 WORKER_IP=()
 
+# Infisical (source of truth for the live talosconfig)
+INFISICAL_PROJECT_ID=8f0b1fbd-3bcf-4f49-bb35-93961d4229f7
+INFISICAL_ENV=prod
+TALOS_CONFIG_SECRET=talos-master-00-config
+
 ACTION=""
 
 usage() {
@@ -17,8 +22,9 @@ usage() {
 	echo "  gen-config   - Generate Talos configuration"
 	echo "  apply-config - Apply configuration to nodes"
 	echo "  set-endpoint - Set talosctl endpoint"
-	echo "  bootstrap    - Bootstrap etcd"
-	echo "  kubeconfig   - Get kubectl access"
+	echo "  bootstrap          - Bootstrap etcd"
+	echo "  kubeconfig         - Get kubectl access"
+	echo "  get-current-config - Fetch live talosconfig from Infisical into ~/.talos/config"
 	exit 1
 }
 
@@ -86,6 +92,41 @@ get_health() {
 	talosctl --nodes $CONTROL_PLANE_IP --talosconfig=./talosconfig health
 }
 
+get_current_config() {
+	echo "Fetching talosconfig from Infisical (secret: $TALOS_CONFIG_SECRET)..."
+	command -v infisical >/dev/null || { echo "Error: infisical CLI not found"; exit 1; }
+
+	local work
+	work=$(mktemp -d)
+	trap 'rm -rf "$work"' RETURN
+
+	(
+		umask 077
+		infisical secrets get "$TALOS_CONFIG_SECRET" \
+			--projectId "$INFISICAL_PROJECT_ID" \
+			--env "$INFISICAL_ENV" \
+			--plain --silent > "$work/talosconfig"
+	)
+
+	if [[ ! -s "$work/talosconfig" ]]; then
+		echo "Error: fetched talosconfig is empty"
+		exit 1
+	fi
+
+	# Drop any existing context with the same name so merge doesn't create a
+	# "<name>-1" duplicate on repeated runs (idempotent refresh).
+	local ctx
+	ctx=$(talosctl --talosconfig="$work/talosconfig" config info 2>/dev/null \
+		| awk -F': *' '/Current context/{print $2}')
+	if [[ -n "$ctx" ]]; then
+		talosctl config remove "$ctx" --noconfirm >/dev/null 2>&1 || true
+	fi
+
+	echo "Merging into ~/.talos/config..."
+	talosctl config merge "$work/talosconfig"
+	talosctl config info
+}
+
 case $ACTION in
 	get-disks)
 		get_disks
@@ -107,6 +148,9 @@ case $ACTION in
 		;;
 	kubeconfig)
 		get_kubeconfig
+		;;
+	get-current-config)
+		get_current_config
 		;;
 	health)
 		get_health
