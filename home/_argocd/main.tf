@@ -41,7 +41,7 @@ resource "helm_release" "argo_cd" {
 
 resource "helm_release" "argo_cd_app_set_config" {
   depends_on = [helm_release.argo_cd]
-  namespace = kubernetes_namespace.this.metadata[0].name
+  namespace  = kubernetes_namespace.this.metadata[0].name
 
   name  = "argo-cd-app-set-config"
   chart = "${path.module}/charts/app-set-config"
