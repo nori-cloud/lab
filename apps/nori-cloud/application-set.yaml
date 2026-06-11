@@ -26,6 +26,7 @@ spec:
                   - app: boubou
                   - app: uptime-kuma
                   - app: nats
+                  - app: visa
     template:
         metadata:
             name: '{{app}}'

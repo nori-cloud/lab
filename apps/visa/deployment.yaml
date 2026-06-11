@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visa
+  namespace: nori-cloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visa
+  template:
+    metadata:
+      labels:
+        app: visa
+    spec:
+      containers:
+        - image: ghcr.io/nori-cloud/visa:2cd634d
+          name: visa
+          ports:
+            - containerPort: 3000
