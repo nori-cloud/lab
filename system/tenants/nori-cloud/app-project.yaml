@@ -1,0 +1,18 @@
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/project-specification/
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: nori-cloud
+  namespace: argo-cd
+  annotations:
+    # Migration-only: survives the app-set-config helm uninstall. Remove
+    # once the release is decommissioned.
+    helm.sh/resource-policy: keep
+spec:
+  description: "nori-cloud project"
+  sourceRepos:
+    - https://github.com/nori-cloud/lab.git
+  destinations:
+    - namespace: nori-cloud
+      server: https://kubernetes.default.svc
+      name: in-cluster
