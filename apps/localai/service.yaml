@@ -11,20 +11,3 @@ spec:
     - port: 8080
       targetPort: 8080
       name: http
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: localai-tailscale
-  namespace: nori-cloud
-  annotations:
-    tailscale.com/hostname: localai
-spec:
-  type: LoadBalancer
-  loadBalancerClass: tailscale
-  selector:
-    app: localai
-  ports:
-    - port: 8080
-      targetPort: 8080
-      name: http

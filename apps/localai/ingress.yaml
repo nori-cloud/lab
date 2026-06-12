@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: localai
+  namespace: nori-cloud
+  labels:
+    app: localai
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: localai
+      port:
+        number: 8080
+  tls:
+    - hosts:
+        - localai
