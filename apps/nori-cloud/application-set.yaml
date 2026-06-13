@@ -27,6 +27,7 @@ spec:
                   - app: uptime-kuma
                   - app: nats
                   - app: visa
+                  - app: searxng
     template:
         metadata:
             name: '{{app}}'
