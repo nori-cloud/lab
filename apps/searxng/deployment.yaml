@@ -13,16 +13,29 @@ spec:
       labels:
         app: searxng
     spec:
+      initContainers:
+        - name: copy-config
+          image: busybox
+          command: ["sh", "-c", "cp /config/settings.yml /etc/searxng/settings.yml"]
+          volumeMounts:
+            - name: config-source
+              mountPath: /config
+            - name: config-writable
+              mountPath: /etc/searxng
       containers:
         - name: searxng
           image: searxng/searxng:latest
           ports:
             - containerPort: 8080
+          env:
+            - name: SEARXNG_PORT
+              value: "8080"
           volumeMounts:
-            - name: config
-              mountPath: /etc/searxng/settings.yml
-              subPath: settings.yml
+            - name: config-writable
+              mountPath: /etc/searxng
       volumes:
-        - name: config
+        - name: config-source
           configMap:
             name: searxng-config
+        - name: config-writable
+          emptyDir: {}
