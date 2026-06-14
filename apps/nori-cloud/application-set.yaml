@@ -28,6 +28,7 @@ spec:
                   - app: nats
                   - app: visa
                   - app: searxng
+                  - app: radicale
     template:
         metadata:
             name: '{{app}}'
