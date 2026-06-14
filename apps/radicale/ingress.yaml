@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: radicale
+  namespace: nori-cloud
+  labels:
+    app: radicale
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: radicale
+      port:
+        number: 5232
+  tls:
+    - hosts:
+        - radicale
