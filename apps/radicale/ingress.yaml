@@ -6,12 +6,18 @@ metadata:
   labels:
     app: radicale
 spec:
-  ingressClassName: tailscale
-  defaultBackend:
-    service:
-      name: radicale
-      port:
-        number: 5232
+  rules:
+    - host: cal.norriswu.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: radicale
+                port:
+                  number: 5232
   tls:
     - hosts:
-        - radicale
+        - cal.norriswu.me
+      secretName: norriswu-me-wildcard-tls
