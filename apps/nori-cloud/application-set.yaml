@@ -26,6 +26,7 @@ spec:
                   - app: boubou
                   - app: uptime-kuma
                   - app: nats
+                  - app: vesta
                   - app: visa
                   - app: searxng
                   - app: radicale
