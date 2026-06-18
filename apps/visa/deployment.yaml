@@ -14,7 +14,7 @@ spec:
         app: visa
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/visa:56663dc
+        - image: ghcr.io/nori-cloud/visa:d392a23
           name: visa
           ports:
             - containerPort: 3000
