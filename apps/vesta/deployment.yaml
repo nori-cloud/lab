@@ -21,3 +21,11 @@ spec:
                 name: vesta-secret
           ports:
             - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
