@@ -14,7 +14,7 @@ spec:
         app: vesta
     spec:
       containers:
-        - image: ghcr.io/nori-cloud/vesta:aaef3fb
+        - image: ghcr.io/nori-cloud/vesta:4cae8ae
           name: vesta
           envFrom:
             - secretRef:
