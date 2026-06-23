@@ -1,39 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: outpost
-  namespace: nori-cloud
+    name: outpost
+    namespace: nori-cloud
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: outpost
-  template:
-    metadata:
-      labels:
-        app: outpost
-    spec:
-      containers:
-        - image: ghcr.io/nori-cloud/outpost:39eb728
-          name: outpost
-          envFrom:
-            - secretRef:
-                name: outpost-secret
-          ports:
-            - containerPort: 3000
-          livenessProbe:
-            httpGet:
-              path: /api/healthz
-              port: 3000
-            initialDelaySeconds: 15
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /api/healthz
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
+    replicas: 1
+    selector:
+        matchLabels:
+            app: outpost
+    template:
+        metadata:
+            labels:
+                app: outpost
+        spec:
+            containers:
+                - image: ghcr.io/nori-cloud/outpost:6927828
+                  name: outpost
+                  envFrom:
+                      - secretRef:
+                            name: outpost-secret
+                  ports:
+                      - containerPort: 3000
+                  livenessProbe:
+                      httpGet:
+                          path: /api/healthz
+                          port: 3000
+                      initialDelaySeconds: 15
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+                  readinessProbe:
+                      httpGet:
+                          path: /api/healthz
+                          port: 3000
+                      initialDelaySeconds: 5
+                      periodSeconds: 10
+                      timeoutSeconds: 5
+                      failureThreshold: 3
+
