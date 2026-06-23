@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devbox
+  namespace: nori-cloud
+  labels:
+    app: devbox
+spec:
+  replicas: 1
+  # Recreate (not RollingUpdate): the new pod must not start until the old one
+  # releases the ReadWriteOnce PVCs, otherwise it deadlocks on volume attach.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: devbox
+  template:
+    metadata:
+      labels:
+        app: devbox
+    spec:
+      containers:
+        - name: devbox
+          image: ghcr.io/nori-cloud/devbox:0.1.0
+          ports:
+            - containerPort: 22
+          volumeMounts:
+            - name: home
+              mountPath: /home/dev
+            - name: opt
+              mountPath: /opt
+          livenessProbe:
+            tcpSocket:
+              port: 22
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 22
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "8Gi"
+              cpu: "4"
+      volumes:
+        - name: home
+          persistentVolumeClaim:
+            claimName: devbox-home
+        - name: opt
+          persistentVolumeClaim:
+            claimName: devbox-opt

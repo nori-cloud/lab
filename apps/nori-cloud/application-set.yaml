@@ -30,6 +30,7 @@ spec:
                   - app: visa
                   - app: searxng
                   - app: radicale
+                  - app: devbox
     template:
         metadata:
             name: '{{app}}'
