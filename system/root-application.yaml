@@ -1,0 +1,34 @@
+# Seed / root app-of-apps: syncs everything under system/, including this
+# manifest itself. Bootstrapped once by OpenTofu (home/_argocd helm_release.seed)
+# from this same file, then self-managed from git.
+#
+# Stays in the built-in "default" project: it must be creatable on a stock
+# Argo CD install where no custom AppProject exists yet.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: system
+  namespace: argo-cd
+  # No resources-finalizer: deleting this Application must never cascade-delete
+  # Argo CD itself or tenant onboarding resources.
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/nori-cloud/lab.git
+    targetRevision: HEAD
+    path: system
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-cd
+  syncPolicy:
+    automated:
+      selfHeal: true
+      # prune stays false until the migration is verified end-to-end; flipped
+      # to true afterwards so tenants can be removed via git.
+      prune: false
+    retry:
+      limit: 20
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m
