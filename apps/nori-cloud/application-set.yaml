@@ -29,6 +29,7 @@ spec:
                   - app: vesta
                   - app: visa
                   - app: searxng
+                  - app: stirling-pdf
                   - app: radicale
                   - app: devbox
     template:
