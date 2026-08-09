@@ -9,25 +9,16 @@ spec:
               elements:
                   - app: cloudflare-tunnel
                   - app: ghcr-credentials
-                  - app: guppy
                   - app: infisical-secretstore
                   - app: pgadmin
                   - app: postgres
                   - app: valkey
                   - app: actual-budget
-                  - app: kokoro
-                  - app: whisper
-                  - app: localai
                   - app: affine
                   - app: outpost
-                  - app: ui
-                  - app: whoami
                   - app: koukou
                   - app: boubou
-                  - app: uptime-kuma
                   - app: nats
-                  - app: visa
-                  - app: searxng
                   - app: radicale
 
     template:
