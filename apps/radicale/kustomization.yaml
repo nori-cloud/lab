@@ -1,7 +1,0 @@
-resources:
-  - configmap.yaml
-  - external-secret.yaml
-  - pvc.yaml
-  - deployment.yaml
-  - service.yaml
-  - ingress.yaml

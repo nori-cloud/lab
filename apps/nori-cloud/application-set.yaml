@@ -7,19 +7,10 @@ spec:
     generators:
         - list:
               elements:
-                  - app: cloudflare-tunnel
                   - app: ghcr-credentials
                   - app: infisical-secretstore
-                  - app: pgadmin
-                  - app: postgres
-                  - app: valkey
                   - app: actual-budget
                   - app: affine
-                  - app: outpost
-                  - app: koukou
-                  - app: boubou
-                  - app: nats
-                  - app: radicale
 
     template:
         metadata:
