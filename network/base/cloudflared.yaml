@@ -29,7 +29,7 @@ spec:
             - name: TUNNEL_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: cloudflare-tunnel-token
+                  name: cloudflare-credentials
                   key: token
           livenessProbe:
             httpGet:
