@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - external-secret-cloudflare.yaml
-  - issuer.yaml
   - gateway-parameters.yaml
   - gateway.yaml
   - cloudflared.yaml
