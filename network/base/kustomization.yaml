@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - secret-store.yaml
+  - external-secret-api-token.yaml
+  - external-secret-tunnel-token.yaml
+  - issuer.yaml
+  - gateway-parameters.yaml
+  - gateway.yaml
+  - cloudflared.yaml

@@ -1,28 +1,52 @@
-# Nori-Cloud Infra
+# nori-lab
 
-This repo manages the infrastructure code for the nori-cloud collection.
+Test tenant apps for the [noperator](https://github.com/nori-cloud/noperator) operator. This repo is consumed by an Argo CD `ApplicationSet` (git directory generator over `*/overlays/{env}`), so the layout is intentionally flat — apps live at the repo root, each with `base/` and `overlays/{env}/`.
 
-## Development Environment
+## Layout
 
-### Prerequisites
-
-Copy the example environment file and configure your secrets:
-
-```bash
-cp .devcontainer/.env.example .devcontainer/.env
+```
+network/   # gateway (kgateway) + cloudflared tunnel + secrets + TLS issuer
+nginx/     # test workload, exposed via HTTPRoute
+whoami/    # test workload, exposed via HTTPRoute
 ```
 
-Edit `.devcontainer/.env` with your actual values:
+Each app follows base/overlays:
 
-| Variable | Description |
-|----------|-------------|
-| `GRAFANA_URL` | Grafana instance URL |
-| `GRAFANA_SERVICE_ACCOUNT_TOKEN` | Service account token for Grafana MCP |
+```
+{app}/
+  base/                 # resources shared across envs, no namespace
+  overlays/{env}/       # namespace: nori-lab-{env}, patches for env-specific values
+```
 
-### MCP Servers
+## Environments
 
-The `.mcp.json` configures MCP servers for Claude Code:
+- `dev`  → namespace `nori-lab-dev`
+- `prod` → namespace `nori-lab-prod`
 
-- **grafana** - Interact with Grafana dashboards, datasources, and alerts
+## Secret provisioning
 
-Tokens are loaded from environment variables (not stored in `.mcp.json`).
+Secrets are the tenant's responsibility. The `network` app declares a
+namespaced `SecretStore` (`nori-lab-secret-store`) that authenticates to
+Infisical using a `nori-lab-infisical-auth` secret. Provision that secret with
+a `SealedSecret` (the `sealedSecrets` extension is enabled for this tenant):
+
+```yaml
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: nori-lab-infisical-auth
+spec:
+  encryptedData:
+    clientId: <sealed>
+    clientSecret: <sealed>
+```
+
+Then the `ExternalSecret`s in `network/` pull `/cloudflare/TUNNEL_TOKEN` and
+`/cloudflare/API_TOKEN` from Infisical for the cloudflared tunnel and the
+cert-manager DNS-01 solver.
+
+## Routing
+
+Workloads are exposed through the `nori-lab-gateway` (kgateway) `Gateway` and a
+Cloudflare Tunnel (`cloudflared`), so external traffic reaches the `HTTPRoute`
+hostnames without a public ingress.

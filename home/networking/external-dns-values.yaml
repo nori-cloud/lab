@@ -1,7 +1,0 @@
-namespace: nori-net
-provider: cloudflare
-
-cloudflare:
-  secretName: cloudflare-creds
-
-policy: sync

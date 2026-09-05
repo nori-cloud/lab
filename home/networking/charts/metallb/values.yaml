@@ -1,5 +1,0 @@
-namespace: metallb-system
-pool:
-  name: home-cluster-pool
-  addresses:
-    - "192.168.0.150-192.168.0.254"
