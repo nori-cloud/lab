@@ -5,9 +5,10 @@ Test tenant apps for the [noperator](https://github.com/nori-cloud/noperator) op
 ## Layout
 
 ```
-network/   # gateway (kgateway) + cloudflared tunnel + secrets + TLS issuer
-nginx/     # test workload, exposed via HTTPRoute
-whoami/    # test workload, exposed via HTTPRoute
+network/          # gateway (kgateway) + cloudflared tunnel + secrets + TLS issuer (prod only)
+nginx/            # test workload, HTTPRoute in prod only
+whoami/           # test workload, HTTPRoute in prod only
+nori-lab-secret/  # Infisical SecretStore + sealed Universal-Auth creds
 ```
 
 Each app follows base/overlays:
@@ -18,30 +19,19 @@ Each app follows base/overlays:
   overlays/{env}/       # namespace: nori-lab-{env}, patches for env-specific values
 ```
 
-## Environments
+## Environment
 
-- `dev`  → namespace `nori-lab-dev`
 - `prod` → namespace `nori-lab-prod`
 
 ## Secret provisioning
 
-Secrets are the tenant's responsibility. The `network` app declares a
+Secrets are the tenant's responsibility. The `nori-lab-secret` app declares a
 namespaced `SecretStore` (`nori-lab-secret-store`) that authenticates to
-Infisical using a `nori-lab-infisical-auth` secret. Provision that secret with
-a `SealedSecret` (the `sealedSecrets` extension is enabled for this tenant):
+Infisical using an `infisical-universal-auth` secret. That secret is provisioned
+by the `SealedSecret` in each overlay (the `sealedSecrets` extension is enabled
+for this tenant).
 
-```yaml
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  name: nori-lab-infisical-auth
-spec:
-  encryptedData:
-    clientId: <sealed>
-    clientSecret: <sealed>
-```
-
-Then the `ExternalSecret`s in `network/` pull `/cloudflare/TUNNEL_TOKEN` and
+The `ExternalSecret` in `network/` pulls `/cloudflare/TUNNEL_TOKEN` and
 `/cloudflare/API_TOKEN` from Infisical for the cloudflared tunnel and the
 cert-manager DNS-01 solver.
 

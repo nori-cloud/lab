@@ -31,6 +31,13 @@ spec:
                 secretKeyRef:
                   name: cloudflare-credentials
                   key: token
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 150m
+              memory: 128Mi
           livenessProbe:
             httpGet:
               path: /ready
