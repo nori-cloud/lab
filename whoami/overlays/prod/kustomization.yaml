@@ -4,3 +4,4 @@ namespace: nori-lab-prod
 
 resources:
   - ../../base
+  - httproute.yaml
