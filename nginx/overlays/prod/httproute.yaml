@@ -7,7 +7,7 @@ spec:
     - name: nori-lab-gateway
       sectionName: http
   hostnames:
-    - nginx.lab.norriswu.me
+    - nginx-lab.norriswu.me
   rules:
     - backendRefs:
         - name: nginx

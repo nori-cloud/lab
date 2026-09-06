@@ -7,7 +7,7 @@ spec:
     - name: nori-lab-gateway
       sectionName: http
   hostnames:
-    - whoami.lab.norriswu.me
+    - whoami-lab.norriswu.me
   rules:
     - backendRefs:
         - name: whoami
