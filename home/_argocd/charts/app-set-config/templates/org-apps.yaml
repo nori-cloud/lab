@@ -4,6 +4,10 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ .name }}
+  annotations:
+    # Migration to git-managed (system/tenants/): lets this release be
+    # uninstalled without deleting the resource.
+    helm.sh/resource-policy: keep
 ---
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/project-specification/
 apiVersion: argoproj.io/v1alpha1
@@ -11,6 +15,8 @@ kind: AppProject
 metadata:
   name: {{ .name }}
   namespace: {{ $.Release.Namespace | quote }}
+  annotations:
+    helm.sh/resource-policy: keep
 spec:
   description: "{{ .name }} project"
   sourceRepos:
@@ -26,6 +32,11 @@ kind: Application
 metadata:
   name: {{ .name }}
   namespace: {{ $.Release.Namespace | quote }}
+  annotations:
+    # CRITICAL: uninstalling this release must never delete the root
+    # Application — its resources-finalizer would cascade-delete every
+    # tenant app.
+    helm.sh/resource-policy: keep
   finalizers:
     # The default behaviour is foreground cascading deletion
     - resources-finalizer.argocd.argoproj.io

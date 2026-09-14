@@ -1,0 +1,35 @@
+# Tenant root app-of-apps: syncs apps/nori-cloud (the ApplicationSet that
+# fans out the org's apps). Parity with the previous app-set-config chart
+# output is intentional — including project: default — so Argo CD adopts the
+# live object with a no-op diff. Tightening to the nori-cloud project is a
+# post-migration follow-up.
+# https://argo-cd.readthedocs.io/en/stable/user-guide/application-specification/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nori-cloud
+  namespace: argo-cd
+  annotations:
+    # Migration-only: survives the app-set-config helm uninstall. Without
+    # this, uninstall would delete the Application and its finalizer would
+    # cascade-delete every nori-cloud app. Remove once decommissioned.
+    helm.sh/resource-policy: keep
+  finalizers:
+    # The default behaviour is foreground cascading deletion
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/nori-cloud/lab.git
+    targetRevision: HEAD
+    path: apps/nori-cloud
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-cd
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

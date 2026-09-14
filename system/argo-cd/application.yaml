@@ -1,0 +1,50 @@
+# Self-managing Argo CD: renders the upstream chart with values from this
+# repo and applies it over the tofu-bootstrapped (stock) install.
+#
+# The chart version pinned at sources[0].targetRevision is the SINGLE source
+# of truth — home/_argocd/main.tf reads it from this file for fresh-cluster
+# bootstrap. Bump it here to upgrade Argo CD.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-cd
+  namespace: argo-cd
+  # No resources-finalizer: deleting this Application must never cascade-delete
+  # the Argo CD installation it manages.
+spec:
+  project: system
+  sources:
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-cd
+      targetRevision: 9.2.3
+      helm:
+        # Must match the tofu helm_release name so rendered resource names
+        # (argo-cd-argocd-server, ...) are identical to the bootstrap install.
+        releaseName: argo-cd
+        valueFiles:
+          - $values/system/argo-cd/values.yaml
+    - repoURL: https://github.com/nori-cloud/lab.git
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-cd
+  ignoreDifferences:
+    # server.secretkey is generated and injected at runtime.
+    - kind: Secret
+      name: argocd-secret
+      jsonPointers:
+        - /data
+  syncPolicy:
+    # automated {selfHeal: true, prune: false} is enabled in a follow-up PR
+    # after the first manual sync's diff has been inspected. prune stays
+    # false permanently: the self-app must never delete pieces of Argo CD.
+    syncOptions:
+      - ServerSideApply=true
+      - RespectIgnoreDifferences=true
+    retry:
+      limit: 20
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 5m

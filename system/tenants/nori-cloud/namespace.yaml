@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nori-cloud
+  annotations:
+    # Migration-only: lets the app-set-config helm release be uninstalled
+    # without deleting this namespace (and every workload in it). Remove
+    # once the release is decommissioned.
+    helm.sh/resource-policy: keep

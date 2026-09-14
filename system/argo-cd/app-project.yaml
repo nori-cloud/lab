@@ -1,0 +1,22 @@
+# Project for Argo CD self-management. Tenant projects only allow the lab
+# repo; this one additionally allows the upstream argo-helm chart repo and
+# cluster-scoped resources (the chart ships CRDs and ClusterRoles).
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: system
+  namespace: argo-cd
+  annotations:
+    # Must exist before the argo-cd Application that references it.
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  description: "Argo CD self-management"
+  sourceRepos:
+    - https://argoproj.github.io/argo-helm
+    - https://github.com/nori-cloud/lab.git
+  destinations:
+    - namespace: argo-cd
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"

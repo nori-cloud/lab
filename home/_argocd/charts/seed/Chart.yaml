@@ -1,0 +1,7 @@
+apiVersion: v2
+name: argo-cd-seed
+description: |
+  Bootstrap-only raw-manifest renderer. Applies the resources passed in via
+  .Values.resources — main.tf feeds it the SAME system/root-application.yaml
+  that Argo CD later syncs from git, so tofu and git cannot drift.
+version: 0.1.0
